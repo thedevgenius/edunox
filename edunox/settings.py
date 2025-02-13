@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'core',
     'account',
+    'academics'
 ]
 
 AUTH_USER_MODEL = 'account.User'
@@ -128,6 +129,10 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static'
 ]
 
+# Media files (Uploaded files)
+# https://docs.djangoproject.com/en/5.1/ref/settings/#media-root
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 
 # Default primary key field type

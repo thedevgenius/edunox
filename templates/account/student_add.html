@@ -1,0 +1,178 @@
+{% extends 'base_site.html' %}
+
+{% block title %}Add New Student{% endblock %}
+
+{% block content %}
+    <div class="container-fixed">
+        <div class="flex flex-wrap items-center lg:items-end justify-between gap-5 pb-7.5">
+            <div class="flex flex-col justify-center gap-2">
+                <h1 class="text-2xl font-semibold leading-none text-gray-900 mb1.5">Add New Student</h1>
+            </div>
+        </div>
+
+        <form method="post" novalidate="novalidate" id="add_student_form" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.errors }}
+            {% if form.non_field_errors %}
+                <span class="text-danger">{{ form.non_field_errors }}</span>
+            {% endif %}
+            <div class="grid grid-cols-3 gap-5">
+                <div class="col-span-1">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title font-medium text-md">Profile Image</h2>
+                        </div>
+                        <div class="card-body">
+                            <div>
+                                <label for="{{ form.profile_image.id_for_label }}" class="form-label flex items-center gap-1 max-w-32 mb-2 capitalize">{{ form.profile_image.label }}<span class="text-danger">*</span></label>
+                                {{ form.profile_image }}
+                                {% if form.profile_image.errors %}<span class="text-danger">{{ form.profile_image.errors }}</span>{% endif %}
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="card mt-5">
+                        <div class="card-header">
+                            <h2 class="card-title font-medium text-md">Class Details</h2>
+                        </div>
+                        <div class="card-body">
+                            <div>
+                                <label for="{{ form.current_class.id_for_label }}" class="form-label flex items-center gap-1 max-w-32 mb-2 capitalize">{{ form.current_class.label }}<span class="text-danger">*</span></label>
+                                {{ form.current_class }}
+                                {% if form.current_class.errors %}<span class="text-danger">{{ form.current_class.errors }}</span>{% endif %}
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="col-span-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title font-medium text-md">Personal Details</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="grid grid-cols-2 gap-5">
+                                <div>
+                                    <label for="{{ form.first_name.id_for_label }}" class="form-label flex items-center gap-1 max-w-32 mb-2 capitalize">{{ form.first_name.label }}<span class="text-danger">*</span></label>
+                                    {{ form.first_name }}
+                                    <span class="text-danger">{{ form.first_name.errors }}</span>
+                                </div>
+                                <div>
+                                    <label for="{{ form.last_name.id_for_label }}" class="form-label flex items-center gap-1 max-w-32 mb-2 capitalize">{{ form.last_name.label }}<span class="text-danger">*</span></label>
+                                    {{ form.last_name }}
+                                    <span class="text-danger">{{ form.last_name.errors }}</span>
+                                </div>
+                            </div>
+
+                            <div class="mt-4">
+                                <div>
+                                    <label for="{{ form.email.id_for_label }}" class="form-label flex items-center gap-1 max-w-32 mb-2 capitalize">{{ form.email.label }}<span class="text-danger">*</span></label>
+                                    {{ form.email }}
+                                    <span class="text-danger">{{ form.email.errors }}</span>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <div>
+                                    <label for="{{ form.phone.id_for_label }}" class="form-label flex items-center gap-1 max-w-32 mb-2 capitalize">{{ form.phone.label }}<span class="text-danger">*</span></label>
+                                    {{ form.phone }}
+                                    {% if form.phone.errors %}<span class="text-danger">{{ form.phone.errors }}</span>{% endif %}
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <div>
+                                    <label for="{{ form.dob.id_for_label }}" class="form-label flex items-center gap-1 max-w-32 mb-2 capitalize">{{ form.dob.label }}<span class="text-danger">*</span></label>
+                                    {{ form.dob }}
+                                    {% if form.dob.errors %}<span class="text-danger">{{ form.dob.errors }}</span>{% endif %}
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <div>
+                                    <label for="{{ form.gender.id_for_label }}" class="form-label items-center gap-5 w-full capitalize">
+                                        <span>{{ form.gender.label }} <span class="text-danger">*</span></span>
+                                        {{ form.gender }}
+                                    </label>
+                                    {% if form.gender.errors %}
+                                        <span class="text-danger">{{ form.gender.errors }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <div>
+                                    <label for="{{ form.address.id_for_label }}" class="form-label flex items-center gap-1 max-w-32 mb-2 capitalize">{{ form.address.label }}<span class="text-danger">*</span></label>
+                                    {{ form.address }}
+                                    {% if form.address.errors %}<span class="text-danger">{{ form.address.errors }}</span>{% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-right mt-5 flex justify-end gap-5">
+                        <button type="reset" class="btn btn-secondary">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add Student</button>
+                    </div>
+                </div>
+            </div>
+            
+        </form>
+        
+    </div>
+{% endblock content %}
+
+
+{% block extra_js %}
+    <script>
+        $(document).ready(function(e){
+            console.log('Ready');
+            // $('#id_current_class').change(function(e){
+            //     var id = $(this).val();
+            //     loadSections(id);
+            // });
+
+            // // Load sections on page load if a class is already selected
+            // var selectedClassId = $('#id_current_class').val();
+            // if (selectedClassId) {
+            //     loadSections(selectedClassId);
+            // }
+
+            // function loadSections(classId) {
+
+            //     $.ajax({
+            //         url: '{% url "get_section" %}',
+            //         type: 'GET',
+            //         data: {
+            //             'class_id': classId
+            //         },
+            //         success: function(response) {
+            //             console.log(response);
+            //             var sections = response.sections;
+            //             if(sections.length>0){
+            //                 var options = '<label for="section" class="form-label flex items-center gap-5 radio"> ';
+            //                 for (var i = 0; i < sections.length; i++) {
+            //                     options += '<span class="flex items-center gap-1 text-white"><input type="radio" name="section" class="radio" value="' + sections[i].id + '" required>' + sections[i].name + '</span>';
+            //                 }
+            //                 options += '</label>';
+            //                 $('#sections').html(options);
+            //             } else{
+            //                 $('#sections').empty();
+            //             }
+            //         },
+            //         error: function(xhr, status, error) {
+            //             console.error(error);
+            //         }
+            //     });
+            // }
+
+            // $('#add_student_form').submit(function (e) {  
+            //     e.preventDefault();
+            //     $('#sections .text-danger').remove(); // Remove any existing error messages
+            //     if ($('input[name="section"]').length && !$('input[name="section"]:checked').val()) {
+            //         $('#sections').append('<span class="text-danger">This field is required</span>');
+            //         return false;
+            //     }
+                
+            //     this.submit();
+            // })
+        });
+    </script>
+{% endblock extra_js %}
+    

@@ -1258,7 +1258,7 @@ video {
   --tw-dark-clarity: rgba(39, 42, 52, 0.20);
   --tw-dark-inverse: #ffffff;
   --tw-light: #1F212A;
-  --tw-light-active: #1F212A;
+  --tw-light-active: #1b1c22;
   --tw-light-light: #1F212A;
   --tw-light-clarity: rgba(31, 33, 42, 0.20);
   --tw-light-inverse: #9A9CAE;
@@ -1275,7 +1275,7 @@ video {
   --tw-info-box-shadow: none;
   --tw-warning-box-shadow: none;
   --tw-dark-box-shadow: none;
-  --tw-card-background-color: #111217;
+  --tw-card-background-color: #15171c;
   --tw-tooltip-background-color: #0B0C10;
   --tw-popover-background-color: #0B0C10;
   --tw-modal-background-color: #0B0C10;
