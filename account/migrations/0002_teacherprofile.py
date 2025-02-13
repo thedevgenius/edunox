@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('bio', models.TextField()),
-                ('academic_qualification', models.CharField(max_length=300)),
+                ('qualification', models.CharField(max_length=300)),
                 ('date_joined', models.DateTimeField(auto_now_add=True)),
                 ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],

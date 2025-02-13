@@ -57,7 +57,7 @@ class AddTeacherView(TemplateView):
             user.save()
             teacher_profile = TeacherProfile.objects.create(user=user, )
             teacher_profile.bio = form.cleaned_data.get('bio')
-            teacher_profile.academic_qualification = form.cleaned_data.get('academic_qualification')
+            teacher_profile.qualification = form.cleaned_data.get('qualification')
             teacher_profile.save()
             return redirect('teachers')
         else:
