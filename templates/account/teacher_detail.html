@@ -1,0 +1,69 @@
+{% extends 'base_site.html' %}
+
+{% block title %}{{ teacher.get_full_name }} | EdunoX{% endblock %}
+
+{% block breadcrumb %}
+    <div class="flex [.header_&amp;]:below-lg:hidden items-center gap-1.25 text-xs lg:text-sm font-medium mb-2.5 lg:mb-0" data-reparent="true" data-reparent-mode="prepend|lg:prepend" data-reparent-target="#content_container|lg:#header_container">
+        <span class="text-gray-600">Dashboard</span>
+        <i class="ki-filled ki-right text-gray-500 text-3xs"></i>
+        <span class="text-gray-700">Teachers</span>
+        <i class="ki-filled ki-right text-gray-500 text-3xs"></i>
+        <span class="text-gray-700">{{ teacher.get_full_name }}</span>
+    </div>
+{% endblock breadcrumb %}
+
+{% block content %}
+    <div class="container-fixed">
+        <div class="flex flex-col items-center gap-2 lg:gap-3.5 py-4 lg:pt-5 lg:pb-10">
+            <img class="rounded-full border-3 border-success size-[100px] shrink-0" src="media/{{ teacher.profile_image }}">
+            <div class="flex items-center gap-1.5">
+                <div class="text-lg leading-5 font-semibold text-gray-900">{{ teacher.get_full_name }}</div>
+                
+            </div>
+            <div class="flex flex-wrap justify-center gap-1 lg:gap-4.5 text-sm">
+                <div class="flex gap-1.25 items-center">
+                    <i class="ki-filled ki-sms text-gray-500 text-sm"></i>
+                    <a class="text-gray-600 hover:text-primary" href="mailto:{{ teacher.email }}">{{ teacher.email }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fixed">
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-5 lg:gap-7.5">
+            <div class="col-span-1">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">About</h3>
+                    </div>
+                    <div class="card-body pt-4 pb-3">
+                        <table class="table-auto">
+                            <tbody>
+                                <tr>
+                                    <td class="text-sm font-medium text-gray-500 pb-3.5 pe-3">Date of Birth:</td>
+                                    <td class="text-sm font-medium text-gray-800 pb-3.5">{{ teacher.date_of_birth }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-sm font-medium text-gray-500 pb-3.5 pe-3">Designation:</td>
+                                    <td class="text-sm font-medium text-gray-800 pb-3.5">{{ teacher.teacher_profile.designation }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-sm font-medium text-gray-500 pb-3.5 pe-3">Qualification:</td>
+                                    <td class="text-sm font-medium text-gray-800 pb-3.5">{{ teacher.teacher_profile.qualification }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}
+
+
+
+{% block extra_js %}
+
+{% endblock extra_js %}
+    

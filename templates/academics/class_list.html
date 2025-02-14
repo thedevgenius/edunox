@@ -19,7 +19,7 @@
             </div>
             <div class="flex items-center gap-2.5">
                 <a class="btn btn-sm btn-light" href="#">Upload CSV</a>
-                <a class="btn btn-sm btn-primary" href="{% url 'subject_add' %}">Add New Subject</a>
+                <a class="btn btn-sm btn-primary" href="#">Add New Subject</a>
             </div>
         </div>
     </div>
@@ -83,11 +83,12 @@
                 <div class="flex flex-col gap-5 lg:gap-7.5" id="team_crew_card">
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 lg:gap-7.5">
                         
-                        {% for class in classes %}
+                        {% for grade in grades %}
                             <div class="card">
                                 <div class="card-body lg:pt-9 lg:pb-7.5">
+                                        <h2 class="text-xl font-semibold leading-none text-gray-900">{{ grade.name }}</h2>
                                         <div class="flex justify-center mb-5">
-                                            <div class="flex items-center justify-center relative text-2.5xl text-info size-20 ring-1 ring-info-clarity bg-info-light rounded-full">{{ class.name }}</div>
+                                            <div class="flex items-center justify-center relative text-2.5xl text-info size-20 ring-1 ring-info-clarity bg-info-light rounded-full"></div>
                                         </div>
                                         
                                         <div class="flex items-center justify-center flex-wrap gap-2 lg:gap-5">

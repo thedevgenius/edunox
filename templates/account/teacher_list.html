@@ -1,11 +1,12 @@
 {% extends 'base_site.html' %}
 
 {% block title %}Teacher List | EdunoX{% endblock %}
+
 {% block breadcrumb %}
     <div class="flex [.header_&amp;]:below-lg:hidden items-center gap-1.25 text-xs lg:text-sm font-medium mb-2.5 lg:mb-0" data-reparent="true" data-reparent-mode="prepend|lg:prepend" data-reparent-target="#content_container|lg:#header_container">
         <span class="text-gray-600">Dashboard</span>
         <i class="ki-filled ki-right text-gray-500 text-3xs"></i>
-        <span class="text-gray-700">Add User</span>
+        <span class="text-gray-700">All Teacher</span>
     </div>
 {% endblock breadcrumb %}
 
@@ -18,7 +19,7 @@
         </div>
         <div class="flex items-center gap-2.5">
             <a class="btn btn-sm btn-light" href="#">Upload CSV</a>
-            <a class="btn btn-sm btn-primary" href="{% url 'teacher_add' %}">Add User</a>
+            <a class="btn btn-sm btn-primary" href="{% url 'teacher_add' %}">Add New Teacher</a>
         </div>
     </div>
 </div>
@@ -27,16 +28,13 @@
     <div class="grid gap-5 lg:gap-7.5">
         <div class="card card-grid min-w-full">
             <div class="card-header flex-wrap gap-2">
-                <h3 class="card-title font-medium text-sm">{{ total_teacher }} users</h3>
-                <div class="flex flex-wrap gap-2 lg:gap-5">
-                    <div class="flex">
-                        <label class="input input-sm">
-                            <i class="ki-filled ki-magnifier">
-                            </i>
-                            <input placeholder="Search users" type="text" value="">
-                            </input>
-                        </label>
-                    </div>
+                 <div class="flex">
+                    <label class="input input-sm">
+                        <i class="ki-filled ki-magnifier"></i>
+                        <input placeholder="Search users" type="text" value="">
+                    </label>
+                </div>
+                {% comment %} <div class="flex flex-wrap gap-2 lg:gap-5">
                     <div class="flex flex-wrap gap-2.5">
                         <select class="select select-sm w-28">
                             <option value="1">
@@ -60,13 +58,8 @@
                                 Oldest
                             </option>
                         </select>
-                        <button class="btn btn-sm btn-outline btn-primary">
-                            <i class="ki-filled ki-setting-4">
-                            </i>
-                            Filters
-                        </button>
                     </div>
-                </div>
+                </div> {% endcomment %}
             </div>
             <div class="card-body">
                 <div data-datatable="false" id="teacher_table">
@@ -96,19 +89,30 @@
                                     <tr>
                                         <td>
                                             <div class="flex items-center gap-2.5">
-                                                <img alt="" class="rounded-full size-9 shrink-0" src="/static/media/avatars/300-1.png" />
+                                                <img alt="" class="rounded-full size-9 shrink-0" src="/media/{{ teacher.profile_image }}" />
                                                 <div class="flex flex-col">
-                                                    <span class="text-sm font-semibold text-gray-900 hover:text-primary-active mb-px">{{ teacher.get_full_name }}</span>
-                                                    <a class="text-2sm font-medium text-gray-600 hover:text-primary-active"href="#">{{ teacher.email }}</a>
+                                                    <a href="{% url 'teacher_detail' teacher.pk %}" class="text-sm font-semibold text-gray-900 mb-px">{{ teacher.get_full_name }}</a>
+                                                    <a class="text-2sm font-medium text-gray-600 hover:text-primary-active" href="mailto:{{ teacher.email }}">{{ teacher.email }}</a>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>{{ teacher.teacher_profile.qualification }}</td>
                                         <td>
-                                            <span class="badge badge-danger badge-outline rounded-[30px]">
-                                                <span class="size-1.5 rounded-full bg-danger me-1.5"></span>
-                                                On Leave
-                                            </span>
+                                            {% if teacher.teacher_profile.status == 'IO' %}
+                                                <span class="badge badge-success badge-outline rounded-[30px]">
+                                                    <span class="size-1.5 rounded-full bg-success me-1.5"></span>Present
+                                                </span>
+                                            {% elif teacher.teacher_profile.status == 'ON' %}
+                                                <span class="badge badge-primary badge-outline rounded-[30px]">
+                                                    <span class="size-1.5 rounded-full bg-primary me-1.5"></span>Wprk From Home
+                                                </span>
+                                            {% elif teacher.teacher_profile.status == 'OL' %}
+                                                <span class="badge badge-danger badge-outline rounded-[30px]">
+                                                    <span class="size-1.5 rounded-full bg-danger me-1.5"></span>On Leave
+                                                </span>
+                                            {% endif %}
+                                                
+                                            
                                         </td>
                                         
                                         <td class="text-center">

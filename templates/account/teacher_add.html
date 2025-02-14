@@ -1,8 +1,56 @@
 {% extends 'base_site.html' %}
 
-{% block title %}Add Teacher{% endblock %}
+{% block title %}Add New Teacher | EdunoX{% endblock %}
+{% block breadcrumb %}
+    <div class="flex [.header_&amp;]:below-lg:hidden items-center gap-1.25 text-xs lg:text-sm font-medium mb-2.5 lg:mb-0" data-reparent="true" data-reparent-mode="prepend|lg:prepend" data-reparent-target="#content_container|lg:#header_container">
+        <span class="text-gray-600">Dashboard</span>
+        <i class="ki-filled ki-right text-gray-500 text-3xs"></i>
+        <span class="text-gray-700">Add New Teacher</span>
+    </div>
+{% endblock breadcrumb %}
 
 {% block content %}
+    <style>
+        #previewImg{
+            display: block;
+            margin: 0 auto;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            object-position: top center;
+        }
+        .preview-image{
+            width: 150px;
+            height: 150px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+            border-radius: 50%;
+        }
+        #id_profile_image{
+            display: none;
+        }
+        .preview-image label{
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 5px 0 5px 0;
+            cursor: pointer;
+        }
+        .preview-image label img{
+            filter: brightness(0) saturate(100%) invert(100%) sepia(100%) saturate(0%) hue-rotate(305deg) brightness(102%) contrast(104%);
+            max-width: 20px;
+            margin: 0 auto;
+        }
+        .radio label{
+            color: #9a9cae;
+            font-size: 15px;
+        }
+    </style>
     <div class="container-fixed">
         <div class="flex flex-wrap items-center lg:items-end justify-between gap-5 pb-7.5">
             <div class="flex flex-col justify-center gap-2">
@@ -10,118 +58,156 @@
             </div>
         </div>
 
-        <form method="post" novalidate="novalidate">
+        <form method="post" novalidate="novalidate" enctype="multipart/form-data">
+            <!-- <span class="text-danger">{{ form.errors }}</span> -->
             {% csrf_token %}
             {% if form.non_field_errors %}
                 <span class="text-danger">{{ form.non_field_errors }}</span>
             {% endif %}
-            <div class="grid grid-cols-3 gap-5 lg:gap-7.5">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
                 <div class="col-span-1">
-                     <div class="card card-grid min-w-full">
+                     <div class="card min-w-full">
                         <div class="card-header">
-                            <h3 class="card-title font-medium text-sm">Authentication Details</h3>
+                            <h3 class="card-title font-medium text-md">Profile Image</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="preview-image">
+                                <img src="/static/media/avatars/300-1.png" alt="Teacher Thumbnail Image" id="previewImg">
+                                <label for="{{ form.profile_image.id_for_label }}" class="form-label flex items-center gap-1 max-w-32 mb-2 capitalize">
+                                    {{ form.profile_image }}
+                                    <img src="/static/media/camera.svg" alt="">
+                                </label>
+                            </div>
+                            <span class="text-danger">{{ form.profile_image.errors }}</span>
                         </div>
                     </div>
                 </div>
                 <div class="col-span-2">
                     <div class="card min-w-full">
                         <div class="card-header">
-                            <h2 class="card-title font-medium text-sm">Authentication Details</h2>
-                        </div>
-                        <div class="card-body   ">
-                            <div>
-                                <label for="{{ form.username.id_for_label }}" class="form-label flex items-center gap-1 max-w-32 mb-2 capitalize">{{ form.username.label }}<span class="text-danger">*</span></label>
-                                {{ form.username }}
-                                <span class="text-danger">{{ form.username.errors }}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card min-w-full mt-4">
-                        <div class="card-header">
-                            <h2 class="card-title font-medium text-sm">Personal Details</h2>
+                            <h2 class="card-title font-medium text-md">Authentication Details</h2>
                         </div>
                         <div class="card-body">
-                            <div>
-                                <label for="{{ form.first_name.id_for_label }}" class="form-label flex items-center gap-1 max-w-32 mb-2 capitalize">{{ form.first_name.label }}<span class="text-danger">*</span></label>
-                                {{ form.first_name }}
-                                <span class="text-danger">{{ form.first_name.errors }}</span>
-                            </div>
-
-                            <div class="mt-4">
-                                <label for="{{ form.last_name.id_for_label }}" class="form-label flex items-center gap-1 max-w-32 mb-2 capitalize">{{ form.last_name.label }}<span class="text-danger">*</span></label>
-                                {{ form.last_name }}
-                                <span class="text-danger">{{ form.last_name.errors }}</span>
-                            </div>
-
-                            <div class="mt-4">
-                                <label for="{{ form.email.id_for_label }}" class="form-label flex items-center gap-1 max-w-32 mb-2 capitalize">{{ form.email.label }}<span class="text-danger">*</span></label>
-                                {{ form.email }}
-                                <span class="text-danger">{{ form.email.errors }}</span>
-                            </div>
-
-                            <div class="mt-4">
-                                <label for="{{ form.phone.id_for_label }}" class="form-label flex items-center gap-1 mb-2 capitalize">{{ form.phone.label }}<span class="text-danger">*</span></label>
-                                {{ form.phone }}
-                                <span class="text-danger">{{ form.phone.errors }}</span>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <!-- <div>
+                                    <label for="{{ form.username.id_for_label }}" class="form-label flex items-center gap-1 max-w-32 mb-2 capitalize">{{ form.username.label }}<span class="text-danger">*</span></label>
+                                    {{ form.username }}
+                                    <span class="text-danger">{{ form.username.errors }}</span>
+                                </div> -->
+                                <div>
+                                    <label for="{{ form.email.id_for_label }}" class="form-label flex items-center gap-1 max-w-32 mb-2 capitalize">{{ form.email.label }}<span class="text-danger">*</span></label>
+                                    {{ form.email }}
+                                    <span class="text-danger">{{ form.email.errors }}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
+
+                    <div class="card min-w-full mt-5">
+                        <div class="card-header">
+                            <h2 class="card-title font-medium text-md">Employement Details</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <div>
+                                    <label for="{{ form.designation.id_for_label }}" class="form-label flex items-center gap-1 max-w-32 mb-2 capitalize">{{ form.designation.label }}<span class="text-danger">*</span></label>
+                                    {{ form.designation }}
+                                    <span class="text-danger">{{ form.designation.errors }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card min-w-full mt-5">
+                        <div class="card-header">
+                            <h2 class="card-title font-medium text-md">Personal Details</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <div>
+                                    <label for="{{ form.first_name.id_for_label }}" class="form-label flex items-center gap-1 max-w-32 mb-2 capitalize">{{ form.first_name.label }}<span class="text-danger">*</span></label>
+                                    {{ form.first_name }}
+                                    <span class="text-danger">{{ form.first_name.errors }}</span>
+                                </div>
+                                <div>
+                                    <label for="{{ form.last_name.id_for_label }}" class="form-label flex items-center gap-1 max-w-32 mb-2 capitalize">{{ form.last_name.label }}<span class="text-danger">*</span></label>
+                                    {{ form.last_name }}
+                                    <span class="text-danger">{{ form.last_name.errors }}</span>
+                                </div>
+                                <div>
+                                    <label for="{{ form.date_of_birth.id_for_label }}" class="form-label flex items-center gap-1 mb-2 capitalize">{{ form.date_of_birth.label }}<span class="text-danger">*</span></label>
+                                    {{ form.date_of_birth }}
+                                    <span class="text-danger">{{ form.date_of_birth.errors }}</span>
+                                </div>
+                                <div>
+                                    <label for="{{ form.blood_group.id_for_label }}" class="form-label flex items-center gap-1 mb-2 capitalize">{{ form.blood_group.label }}<span class="text-danger">*</span></label>
+                                    {{ form.blood_group }}
+                                    <span class="text-danger">{{ form.blood_group.errors }}</span>
+                                </div>
+                                <div>
+                                    <label for="{{ form.gender.id_for_label }}" class="form-label flex items-center gap-1 mb-2 capitalize">{{ form.gender.label }}<span class="text-danger">*</span></label>
+                                    {{ form.gender }}
+                                    <span class="text-danger">{{ form.gender.errors }}</span>
+                                </div>
+                                <div>
+                                    <label for="{{ form.address.id_for_label }}" class="form-label flex items-center gap-1 mb-2 capitalize">{{ form.address.label }}<span class="text-danger">*</span></label>
+                                    {{ form.address }}
+                                    <span class="text-danger">{{ form.address.errors }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card min-w-full mt-5">
+                        <div class="card-header">
+                            <h2 class="card-title font-medium text-md">Academic Details</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <div>
+                                    <label for="{{ form.qualification.id_for_label }}" class="form-label flex items-center gap-1 max-w-32 mb-2 capitalize">{{ form.qualification.label }}<span class="text-danger">*</span></label>
+                                    {{ form.qualification }}
+                                    <span class="text-danger">{{ form.qualification.errors }}</span>
+                                </div>
+                                <div>
+                                    <label for="{{ form.core_subject.id_for_label }}" class="form-label flex items-center gap-1 max-w-32 mb-2 capitalize">{{ form.core_subject.label }}<span class="text-danger">*</span></label>
+                                    {{ form.core_subject }}
+                                    <span class="text-danger">{{ form.core_subject.errors }}</span>
+                                </div>
+                                <div class="lg:col-span-2">
+                                    <label for="{{ form.bio.id_for_label }}" class="form-label flex items-center gap-1 max-w-32 mb-2 capitalize">{{ form.bio.label }}<span class="text-danger">*</span></label>
+                                    {{ form.bio }}
+                                    <span class="text-danger">{{ form.bio.errors }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end gap-5 mt-5">
+                        <button type="reset" class="btn btn-secondary">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add Teacher</button>
+                    </div>
                 </div>
             </div>
-                
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 lg:gap-7.5">
-                <div>
-                    <label for="{{ form.first_name.id_for_label }}" class="form-label flex items-center gap-1 max-w-32 mb-2 capitalize">{{ form.first_name.label }}<span class="text-danger">*</span></label>
-                    {{ form.first_name }}
-                    <span class="text-danger">{{ form.first_name.errors }}</span>
-                </div>
-                <div>
-                    <label for="{{ form.last_name.id_for_label }}" class="form-label flex items-center gap-1 max-w-32 mb-2 capitalize">{{ form.last_name.label }}<span class="text-danger">*</span></label>
-                    {{ form.last_name }}
-                    <span class="text-danger">{{ form.last_name.errors }}</span>
-                </div>
-                <div>
-                    <label for="{{ form.username.id_for_label }}" class="form-label flex items-center gap-1 max-w-32 mb-2 capitalize">{{ form.username.label }}<span class="text-danger">*</span></label>
-                    {{ form.username }}
-                    <span class="text-danger">{{ form.username.errors }}</span>
-                </div>
-                <div>
-                    <label for="{{ form.email.id_for_label }}" class="form-label flex items-center gap-1 max-w-32 mb-2 capitalize">{{ form.email.label }}<span class="text-danger">*</span></label>
-                    {{ form.email }}
-                    <span class="text-danger">{{ form.email.errors }}</span>
-                </div>
-                <div>
-                    <label for="{{ form.qualification.id_for_label }}" class="form-label flex items-center gap-1 mb-2 capitalize">{{ form.qualification.label }}<span class="text-danger">*</span></label>
-                    {{ form.qualification }}
-                    <span class="text-danger">{{ form.qualification.errors }}</span>
-                </div>
-                <div>
-                    <label for="{{ form.phone.id_for_label }}" class="form-label flex items-center gap-1 mb-2 capitalize">{{ form.phone.label }}<span class="text-danger">*</span></label>
-                    {{ form.phone }}
-                    <span class="text-danger">{{ form.phone.errors }}</span>
-                </div>
-                <div>
-                    <label for="{{ form.gender.id_for_label }}" class="form-label flex items-center gap-1 mb-2 capitalize">{{ form.gender.label }}<span class="text-danger">*</span></label>
-                    {{ form.gender }}
-                    <span class="text-danger">{{ form.gender.errors }}</span>
-                </div>
-                <div>
-                    <label for="{{ form.address.id_for_label }}" class="form-label flex items-center gap-1 mb-2 capitalize">{{ form.address.label }}<span class="text-danger">*</span></label>
-                    {{ form.address }}
-                    <span class="text-danger">{{ form.address.errors }}</span>
-                </div>
-                <div class="col-span-2">
-                    <label for="{{ form.bio.id_for_label }}" class="form-label flex items-center gap-1 max-w-32 mb-2 capitalize">{{ form.bio.label }}<span class="text-danger">*</span></label>
-                    {{ form.bio }}
-                    <span class="text-danger">{{ form.bio.errors }}</span>
-                </div>
-                <div class="col-span-2">
-                    <button class="btn btn-primary">ADD</button>
-                </div>
-            </div>
-            
         </form>
         
     </div>
 {% endblock content %}
+
+
+{% block extra_js %}
+    <script>
+        function dragNdrop(event) {
+            var fileName = URL.createObjectURL(event.target.files[0]);
+            var preview = document.getElementById("preview");
+            var previewImg = document.getElementById("previewImg");
+            previewImg.setAttribute("src", fileName);
+            preview.innerHTML = "";
+            preview.appendChild(previewImg);
+        }
+        $(document).change(function(event){
+            dragNdrop(event);
+        })
+    </script>
+{% endblock extra_js %}
+    
