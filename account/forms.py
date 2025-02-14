@@ -18,7 +18,7 @@ class UserAddForm(forms.ModelForm):
     last_name = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class': 'input', 'placeholder': 'Last Name'}))
     email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'input', 'placeholder': 'Email'}))
     phone = forms.CharField(widget=forms.TextInput(attrs={'class': 'input', 'placeholder': 'Phone Number'}))
-    gender = forms.ChoiceField(choices=GENDER_CHOICES, widget=forms.RadioSelect(attrs={'class': 'radio'}))
+    gender = forms.ChoiceField(choices=GENDER_CHOICES, required=True, widget=forms.RadioSelect(attrs={'class': 'radio'}))
     address = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class': 'input', 'placeholder': 'Address'}))
     dob = forms.DateField(label='Date of Birth', widget=forms.DateInput(attrs={'type': 'date', 'class': 'input'}))
     profile_image = forms.ImageField(widget=forms.FileInput())

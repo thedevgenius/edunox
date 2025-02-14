@@ -1,7 +1,9 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from .models import Class, Section
-from django.views.generic import View
+from django.views.generic import View, CreateView, TemplateView
+from .models import Subject
+from .forms import AddSubjectForm
 # Create your views here.
 
 class GetSectionView(View):
@@ -11,4 +13,24 @@ class GetSectionView(View):
         sections = Section.objects.filter(class_obj=Class.objects.get(id=id))
         sections_list = list(sections.values('id', 'name'))
         return JsonResponse({'success': True, 'sections': sections_list})
+    
+class ClassListView(TemplateView):
+    template_name = 'academics/class_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         
+        classes = Class.objects.all()
+        context['classes'] = classes
+        return context
+
+
+class SubjectListView(TemplateView):
+    template_name = 'academics/subject_list.html'
+
+class AddSubjectView(CreateView):
+    model = Subject
+    form_class = AddSubjectForm
+    template_name = 'academics/subject_add.html'
+
+    

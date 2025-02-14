@@ -2,12 +2,19 @@ from django.db import models
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
+
 # Create your models here.
+
 class Class(models.Model):
     name = models.CharField(max_length=50, unique=True)
+    
 
     def __str__(self):
         return self.name
+
+    def total_students(self):
+        return sum(section.studentprofile_set.count() for section in self.sections.all())
+    
     
 class Section(models.Model):
     class_obj = models.ForeignKey(Class, on_delete=models.CASCADE, related_name="sections")
@@ -17,3 +24,11 @@ class Section(models.Model):
 
     def __str__(self):
         return f"{self.class_obj.name} - Section {self.name}"
+
+class Subject(models.Model):
+    name = models.CharField(max_length=50)
+    code = models.CharField(max_length=10, unique=True)
+    class_obj = models.ForeignKey(Class, on_delete=models.CASCADE, related_name="subjects")
+    
+    def __str__(self):
+        return self.code
