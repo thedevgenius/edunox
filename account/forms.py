@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from .models import User
+from academics.models import Grade
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class': 'input', 'placeholder': 'Username'}))
@@ -23,6 +24,20 @@ class UserAddForm(forms.ModelForm):
         ('op', 'O +'),
         ('on', 'O -'),
     ]
+    CASTE_CHOICE = [
+        ('', 'Select Caste'),
+        ('GN', 'General'),
+        ('SC', 'SC'),
+        ('ST', 'ST'),
+        ('OB', 'OBC'),
+    ]
+    RELIGION_CHOICE = [
+        ('', 'Select Religion'),
+        ('H', 'Hindu'),
+        ('M', 'Muslim'),
+        ('S', 'Sikh'),
+        ('O', 'Other')
+    ]
     
     first_name = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class': 'input', 'placeholder': 'First Name'}))
     last_name = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class': 'input', 'placeholder': 'Last Name'}))
@@ -31,7 +46,9 @@ class UserAddForm(forms.ModelForm):
     address = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class': 'input', 'placeholder': 'Address'}))
     date_of_birth = forms.DateField(label='Date of Birth', widget=forms.DateInput(attrs={'type': 'date', 'class': 'input'}))
     blood_group = forms.ChoiceField(choices=BLOOD_GROUP_CHOICE, required=True, widget=forms.Select(attrs={'class': 'select'}))
-    profile_image = forms.ImageField(widget=forms.FileInput())
+    profile_image = forms.ImageField(required=False, widget=forms.FileInput())
+    caste = forms.ChoiceField(choices=CASTE_CHOICE, required=True, widget=forms.Select(attrs={'class': 'select'}))
+    religion = forms.ChoiceField(choices=RELIGION_CHOICE, required=True, widget=forms.Select(attrs={'class': 'select'}))
     
 
     class Meta:
@@ -49,6 +66,12 @@ class AddTeacherForm(UserAddForm):
 
 
 class AddStudentForm(UserAddForm):
+    email = forms.EmailField(required=False, widget=forms.EmailInput(attrs={'class': 'input', 'placeholder': 'Email'}))
     username = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={'class': 'input', 'placeholder': 'Username'}))
-    # current_class = forms.ModelChoiceField(queryset=Class.objects.all(), widget=forms.Select(attrs={'class': 'select'}))
-
+    grade = forms.ModelChoiceField(label='Class', queryset=Grade.objects.all(), widget=forms.Select(attrs={'class': 'select'}))
+    father_name = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class': 'input', 'placeholder': 'Father Name'}))
+    father_email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'input', 'placeholder': 'Father Email'}))
+    father_phone = forms.CharField(max_length=15, widget=forms.TextInput(attrs={'class': 'input', 'placeholder': 'Father Phone'}))
+    mother_name = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class': 'input', 'placeholder': 'Mother Name'}))
+    mother_email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'input', 'placeholder': 'Mother Email'}))
+    mother_phone = forms.CharField(max_length=15, widget=forms.TextInput(attrs={'class': 'input', 'placeholder': 'Mother Phone'}))

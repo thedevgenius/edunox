@@ -10,7 +10,7 @@ from datetime import datetime
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from .forms import LoginForm, AddTeacherForm, AddStudentForm
-from .models import TeacherProfile, User, Role
+from .models import TeacherProfile, StudentProfile, User, Role
 
 
 now = datetime.now()
@@ -25,6 +25,7 @@ class SignInView(LoginView):
 def logout_view(request):
     logout(request)
     return redirect('home')
+
 
 @method_decorator(login_required, name='dispatch')
 class TeacherListView(LoginRequiredMixin, TemplateView):
@@ -44,6 +45,7 @@ class TeacherListView(LoginRequiredMixin, TemplateView):
             'total_teacher': teachers.count()
         })
         return context
+
 
 @method_decorator(login_required, name='dispatch')
 class AddTeacherView(TemplateView):
@@ -94,7 +96,9 @@ class AddTeacherView(TemplateView):
         else:
             print('Error')
         return render(request, self.template_name, {'form': form})
-    
+
+
+@method_decorator(login_required, name='dispatch')
 class TeacherDetailsView(DetailView):
     model = User
     template_name = 'account/teacher_detail.html'
@@ -105,51 +109,83 @@ class TeacherDetailsView(DetailView):
         context['teacher'] = teacher
         return context
 
-# class AddStudentView(TemplateView):
-#     template_name = 'account/student_add.html'
 
+@method_decorator(login_required, name='dispatch')
+class AddStudentView(TemplateView):
+    template_name = 'account/student_add.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = AddStudentForm()
+
+        return context
     
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['form'] = AddStudentForm()
+    def post(self, request, *args, **kwargs):
+        form = AddStudentForm(request.POST, request.FILES)
+        if form.is_valid():
+            first_name = form.cleaned_data.get('first_name')
+            last_name = form.cleaned_data.get('last_name')
+            dob = form.cleaned_data.get('date_of_birth')
+            username = f'ST{now.strftime("%y")}{first_name[0]}{last_name[0]}{dob:%m%d}'
+            role, _ = Role.objects.get_or_create(name='Student')
 
-#         return context
+            user = User.objects.create_user(
+                username=username,
+                password='Summer@2025#',
+                first_name=first_name,
+                last_name=last_name,
+                blood_group=form.cleaned_data.get('blood_group'),
+                gender=form.cleaned_data.get('gender'),
+                address=form.cleaned_data.get('address'),
+                date_of_birth=form.cleaned_data.get('date_of_birth'),
+                profile_image=form.cleaned_data.get('profile_image'),
+                role=role,
+                type='ST'
+            )
+            grade = form.cleaned_data.get('grade')
+            last_roll = StudentProfile.objects.filter(grade=grade).aggregate(last_roll=Count('roll'))['last_roll'] or 0
+            total_roll = last_roll + 1
+            StudentProfile.objects.create(
+                user=user,
+                grade=grade,
+                total_roll=total_roll,
+                father_name=form.cleaned_data.get('father_name'),
+                father_email=form.cleaned_data.get('father_email'),
+                father_phone=form.cleaned_data.get('father_phone'),
+                mother_name=form.cleaned_data.get('mother_name'),
+                mother_email=form.cleaned_data.get('mother_email'),
+                mother_phone=form.cleaned_data.get('mother_phone'),
+            )
+            return redirect('dashboard')
+
+        else:
+            print('Error')
+        return render(request, self.template_name, {'form': form})
     
-#     def post(self, request, *args, **kwargs):
-#         form = AddStudentForm(request.POST, request.FILES)
-#         if form.is_valid():
-#             current_class = form.cleaned_data.get('current_class')
-#             first_name=form.cleaned_data.get('first_name')
-#             last_name=form.cleaned_data.get('last_name')
-#             dob = form.cleaned_data.get('dob')
-#             profile_image=form.cleaned_data.get('profile_image')
-#             username = f'EDU{str(now.year)[2:]}{first_name[:1]}{last_name[:1]}{dob.month:02}{dob.day:02}'
-#             user = User.objects.create_user(
-#                 username=username,
-#                 password='Summer@2025#',
-#                 first_name=first_name,
-#                 last_name=last_name,
-#                 email=form.cleaned_data.get('email'),
-#                 phone=form.cleaned_data.get('phone'),
-#                 address=form.cleaned_data.get('address'),
-#                 dob=dob,
-#                 profile_image=profile_image
-#             )
-            
-#             #Create student profile for student
-#             student_profile = StudentProfile.objects.create(
-#                 user=user,
-#                 current_class=current_class,    
-#             )
+@method_decorator(login_required, name='dispatch')
+class StudentListView(TemplateView):
+    template_name = 'account/student_list.html'
 
-#             #Assign available section to student
-#             sections = Section.objects.filter(class_obj=current_class).annotate(student_count=Count('studentprofile'))
-#             for section in sections:
-#                 if section.student_count < section.max_student:
-#                     student_profile.section = section
-#                     student_profile.save()
-#                     break
-#             return redirect('teachers')
-#         else:
-#             print('Error')
-#         return render(request, self.template_name, {'form': form})
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        students = User.objects.filter(type='ST').select_related('student_profile').order_by('first_name')
+        
+        context.update({
+           'students': students,
+            'total_student': students.count()
+        })
+        return context
+
+
+
+@method_decorator(login_required, name='dispatch')
+class StudentDetailsView(DetailView):
+    model = User
+    template_name = 'account/student_detail.html'
+    context_object_name = 'student'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        student = self.get_object()
+        context['student'] = student
+        return context

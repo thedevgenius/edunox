@@ -13,7 +13,7 @@ class Access(models.Model):
 class Role(models.Model):
     name = models.CharField(max_length=100)
     code = models.CharField(max_length=5, unique=True)
-    accesses = models.ManyToManyField('Access')
+    accesses = models.ManyToManyField('Access', blank=True)
 
     def __str__(self):
         return self.name
@@ -36,8 +36,22 @@ class User(AbstractUser):
     )
     USER_TYPE = (
         ('TE', 'Teacher'),
-        ('ST', 'Student')
+        ('ST', 'Student'),
+        ('AD', 'Admin'),
     )
+    CASTE_CHOICE = (
+        ('GN', 'General'),
+        ('SC', 'SC'),
+        ('ST', 'ST'),
+        ('OB', 'OBC'),
+    )
+    RELIGION_CHOICE = (
+        ('H', 'Hindu'),
+        ('M', 'Muslim'),
+        ('S', 'Sikh'),
+        ('O', 'Other')
+    )
+    
     role = models.ForeignKey(Role, on_delete=models.CASCADE, null=True)
     type = models.CharField(max_length=5, choices=USER_TYPE, default='ST')
     date_of_birth = models.DateField(null=True)
@@ -46,10 +60,12 @@ class User(AbstractUser):
     address = models.CharField(max_length=200, null=True)
     blood_group = models.CharField(max_length=5, null=True, choices=BLOOD_GROUP_CHOICE)
     profile_image = models.ImageField(upload_to='user/', null=True, blank=True)
+    caste = models.CharField(max_length=5, null=True, choices=CASTE_CHOICE)
+    religion = models.CharField(max_length=5, null=True, choices=RELIGION_CHOICE)
 
 
     def __str__(self):
-        return self.username
+        return self.get_full_name()
     
     # def save(self, *args, **kwargs):
     #     # if not self.pk:
@@ -75,14 +91,22 @@ class TeacherProfile(models.Model):
         return self.user.username
 
 
-# class StudentProfile(models.Model):
-#     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='student_profile', editable=False, limit_choices_to={'role': 'ST'})
-#     current_class = models.ForeignKey('academics.Class', on_delete=models.SET_NULL, null=True)
-#     section = models.ForeignKey('academics.Section', on_delete=models.SET_NULL, null=True)
-#     roll_no = models.IntegerField(null=True)
+class StudentProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='student_profile', editable=False, limit_choices_to={'role': 'ST'})
+    grade = models.ForeignKey('academics.Grade', on_delete=models.SET_NULL, null=True)
+    roll = models.IntegerField(null=True)
+    total_roll = models.IntegerField(null=True)
+    father_name = models.CharField(max_length=200, null=True)
+    father_email = models.EmailField(null=True)
+    father_phone = models.CharField(max_length=15, null=True)
+    mother_name = models.CharField(max_length=200, null=True)
+    mother_email = models.EmailField(null=True)
+    mother_phone = models.CharField(max_length=15, null=True)
+    
+    
 
-#     def __str__(self):
-#         return f'{self.user.first_name} {self.user.last_name} Profile'
+    def __str__(self):
+        return f'{self.user.first_name} {self.user.last_name} Profile'
     
 
 
