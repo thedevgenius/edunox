@@ -1,0 +1,70 @@
+<div data-datatable="false" id="student_table">
+    <div class="scrollable-x-auto">
+        <table class="table table-auto" data-datatable-table="true">
+            <thead>
+                <tr>
+                    <th class="min-w-[300px]">
+                        <span class="sort asc">
+                            <span class="sort-label">Name</span>
+                            <span class="sort-icon"></span>
+                        </span>
+                    </th>
+                    <th class="min-w-[180px]">Class</th>
+                    <th class="min-w-[180px]">Roll</th>
+                    <th class="min-w-[180px]">Father Name</th>
+                    <th class="w-[60px] text-center">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                    <tr>
+                        <td>
+                            <div class="flex items-center gap-2.5">
+                                {% if student.profile_image %}
+                                    <img alt="" class="rounded-full size-9 shrink-0" src="/media/{{ student.profile_image }}" />
+                                {% else %}
+                                    <img alt="" class="rounded-full size-9 shrink-0" src="/static/media/avatars/300-2.png" />
+                                {% endif %}
+                                
+                                <div class="flex flex-col">
+                                    <a href="#" class="text-sm font-semibold text-gray-900 mb-px">{{ student.get_full_name }}</a>
+                                    <span class="text-2sm font-medium text-gray-600 hover:text-primary-active">{{ student.username }}</span>
+
+                                </div>
+                            </div>
+                        </td>
+                        <td>{{ student.student_profile.grade }}</td>
+                        <td>{{ student.student_profile.total_roll }}</td>
+                        <td>{{ student.student_profile.father_name }}</td>
+                        <td class="text-center">
+                            <div class="flex">
+                                <button class="btn btn-sm btn-icon btn-clear btn-light viwe_student" data-id="{{ student.id }}">
+                                    <i class="ki-filled ki-eye"></i>
+                                </button>
+                                <button class="btn btn-sm btn-icon btn-clear btn-light">
+                                    <i class="ki-filled ki-notepad-edit"></i>
+                                </button>
+                                <div class="btn btn-sm btn-icon btn-clear btn-light">
+                                    <i class="ki-filled ki-trash"></i>
+                                </div>
+
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}                                    
+                
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card-footer justify-center md:justify-between flex-col md:flex-row gap-5 text-gray-600 text-2sm font-medium">
+        <div class="flex items-center gap-2 order-2 md:order-1">Show
+            <select class="select select-sm w-16" data-datatable-size="true" name="perpage"></select> per page
+        </div>
+        <div class="flex items-center gap-4 order-1 md:order-2">
+            <span data-datatable-info="true"></span>
+            <div class="pagination" data-datatable-pagination="true"></div>
+        </div>
+    </div>
+
+</div>

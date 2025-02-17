@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
+from django.http import JsonResponse
 from django.contrib.auth.views import LoginView
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, View
 from django.views.generic import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
@@ -11,7 +12,24 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from .forms import LoginForm, AddTeacherForm, AddStudentForm
 from .models import TeacherProfile, StudentProfile, User, Role
+from academics.models import Grade
+from django.template.loader import render_to_string
 
+def student_filter(class_id, name):
+    if class_id and name:
+        grade = Grade.objects.get(id=class_id)
+        students = User.objects.filter(type='ST', student_profile__grade=grade, first_name__startswith=name).select_related('student_profile').order_by('student_profile__total_roll')
+    elif class_id and not name:
+        grade = Grade.objects.get(id=class_id)
+        students = User.objects.filter(type='ST', student_profile__grade=grade).select_related('student_profile').order_by('student_profile__total_roll')
+    elif name and not class_id:
+        students = User.objects.filter(type='ST', first_name__startswith=name).select_related('student_profile').order_by('student_profile__total_roll')
+    else:
+        students = User.objects.filter(type='ST').select_related('student_profile').order_by('first_name')
+    
+    return students
+    
+    
 
 now = datetime.now()
 # # Create your views here.
@@ -169,23 +187,38 @@ class StudentListView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         students = User.objects.filter(type='ST').select_related('student_profile').order_by('first_name')
+        classes = Grade.objects.all()
         
         context.update({
            'students': students,
-            'total_student': students.count()
+            'total_student': students.count(),
+            'classes' : classes
         })
         return context
+
+@method_decorator(login_required, name='dispatch')
+class StudentListByClassView(View):
+    def get(self, request, *args, **kwargs):
+        class_id = request.GET.get('class_id')
+        text = request.GET.get('text')
+        students = student_filter(class_id=class_id, name=text)
+        html = render_to_string('account/includes/student_table.html', {'students' : students})
+        return JsonResponse({'success': True, 'html': html})
+
+@method_decorator(login_required, name='dispatch')
+class StudentListByNameView(View):
+    def get(self, request, *args, **kwargs):
+        class_id = request.GET.get('class_id')
+        texts = request.GET.get('texts')
+        students = student_filter(class_id=class_id, name=texts)
+        html = render_to_string('account/includes/student_table.html', {'students' : students})
+        return JsonResponse({'success': True, 'html': html})
 
 
 
 @method_decorator(login_required, name='dispatch')
 class StudentDetailsView(DetailView):
-    model = User
-    template_name = 'account/student_detail.html'
-    context_object_name = 'student'
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        student = self.get_object()
-        context['student'] = student
-        return context
+    def get(self, request, *args, **kwargs):
+        student_id = request.GET.get('student_id')
+        student_profile = StudentProfile.objects.select_related('user').get(user__id=student_id)
+        return JsonResponse({'success': True})

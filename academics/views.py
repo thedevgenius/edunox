@@ -1,13 +1,14 @@
-from django.shortcuts import render
-from django.http import JsonResponse
-from django.views.generic import TemplateView, DetailView
-from account.models import StudentProfile
-from account.models import User, StudentProfile
-from django.db import IntegrityError
-from django.contrib import messages
-from .models import Grade, Subject, Schedule
-from .forms import AddScheduleForm
 from collections import defaultdict
+
+from django.contrib import messages
+from django.db import IntegrityError
+from django.http import JsonResponse
+from django.shortcuts import render
+from django.views.generic import TemplateView, DetailView, View
+
+from account.models import StudentProfile, User
+from .forms import AddScheduleForm
+from .models import Grade, Subject, Schedule
 
 
 # Create your views here.
@@ -32,23 +33,16 @@ class ClassDetailView(DetailView):
         context['students'] = StudentProfile.objects.filter(grade=grade).order_by('roll')
         context['subjects'] = Subject.objects.filter(grade=grade)
         context['form'] = AddScheduleForm(grade=grade)
+        
         schedules = Schedule.objects.filter(grade=grade).select_related('grade', 'subject', 'teacher').order_by('day', 'period')
         grouped_schedules = defaultdict(list)
         for schedule in schedules:
             grouped_schedules[schedule.day].append(schedule)
-        dict_grouped_schedules = dict(grouped_schedules)
-        print(dict_grouped_schedules)
-        
-
         context['grouped_schedules'] = dict(grouped_schedules)
 
-        # for day, schedule_list in grouped_schedules.items():
-        #     print(day)
-        #     for i in range(1, 6):
-        #         if i not in [sch.period for sch in schedule_list]:
-        #             schedule_list.append(Schedule(grade=self.object, day=day, period=i, subject=None, teacher=None))
-        #     for sch in schedule_list:
-        #         print(f"Period: {sch.period}, Teacher: {sch.teacher}")
+        
+        days = {1, 2, 3, 4, 5, 6, 7, 8}
+        context['days'] = days
         return context
 
     def post(self, request, *args, **kwargs):
@@ -56,7 +50,7 @@ class ClassDetailView(DetailView):
         form = AddScheduleForm(self.object, request.POST)
         if form.is_valid():
             try:
-                schedule = Schedule.objects.create(
+                Schedule.objects.create(
                     grade=self.object,
                     day=form.cleaned_data.get('day'),
                     subject=form.cleaned_data.get('subject'),
@@ -69,3 +63,9 @@ class ClassDetailView(DetailView):
             print(form.errors)
         return self.get(request, *args, **kwargs) 
        
+class ScheduleView(View):
+    def get(self, request, *args, **kwargs):
+        day = request.GET.get('day')
+        period = request.GET.get('period')
+        print(day, period)
+        return JsonResponse({'success' : True})

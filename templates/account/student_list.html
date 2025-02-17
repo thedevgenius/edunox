@@ -11,6 +11,14 @@
 {% endblock breadcrumb %}
 
 {% block content %}
+<style>
+    .filter-by-class .menu-icon{
+        display: none;
+    }
+    .filter-by-class.active .menu-icon{
+        display: block;
+    }
+</style>
 <div class="container-fixed">
     <div class="flex flex-wrap items-center lg:items-end justify-between gap-5 pb-7.5">
         <div class="flex flex-col justify-center gap-2">
@@ -29,188 +37,139 @@
                  <div class="flex">
                     <label class="input input-sm">
                         <i class="ki-filled ki-magnifier"></i>
-                        <input placeholder="Search users" type="text" value="">
+                        <input class="student_search" placeholder="Search by name" type="text" value="" name="student_search">
                     </label>
                 </div>
-                {% comment %} <div class="flex flex-wrap gap-2 lg:gap-5">
+                <div class="flex flex-wrap gap-2 lg:gap-5">
                     <div class="flex flex-wrap gap-2.5">
-                        <select class="select select-sm w-28">
-                            <option value="1">
-                                Active
-                            </option>
-                            <option value="2">
-                                Disabled
-                            </option>
-                            <option value="2">
-                                Pending
-                            </option>
-                        </select>
-                        <select class="select select-sm w-28">
-                            <option value="1">
-                                Latest
-                            </option>
-                            <option value="2">
-                                Older
-                            </option>
-                            <option value="3">
-                                Oldest
-                            </option>
-                        </select>
-                    </div>
-                </div> {% endcomment %}
-            </div>
-            <div class="card-body">
-                <div data-datatable="false" id="teacher_table">
-                    <div class="scrollable-x-auto">
-                        <table class="table table-auto table-border" data-datatable-table="true">
-                            <thead>
-                                <tr>
-                                    <th class="min-w-[300px]">
-                                        <span class="sort asc">
-                                            <span class="sort-label">Name</span>
-                                            <span class="sort-icon"></span>
-                                        </span>
-                                    </th>
-                                    <th class="min-w-[180px]">Class</th>
-                                    <th class="min-w-[180px]">Roll</th>
-                                    <th class="min-w-[180px]">Father Name</th>
-                                    <th class="w-[60px]">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for student in students %}
-                                    <tr>
-                                        <td>
-                                            <div class="flex items-center gap-2.5">
-                                                {% if student.profile_image %}
-                                                    <img alt="" class="rounded-full size-9 shrink-0" src="/media/{{ student.profile_image }}" />
-                                                {% else %}
-                                                    <img alt="" class="rounded-full size-9 shrink-0" src="/static/media/avatars/300-2.png" />
-                                                {% endif %}
-                                                
-                                                <div class="flex flex-col">
-                                                    <a href="#" class="text-sm font-semibold text-gray-900 mb-px">{{ student.get_full_name }}</a>
-                                                    <span class="text-2sm font-medium text-gray-600 hover:text-primary-active">{{ student.username }}</span>
-
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>{{ student.student_profile.grade }}</td>
-                                        <td>{{ student.student_profile.total_roll }}</td>
-                                        <td>{{ student.student_profile.father_name }}</td>
-                                        <td class="text-center">
-                                            <div class="menu flex-inline" data-menu="true">
-                                                <div class="menu-item" data-menu-item-offset="0, 10px"
-                                                    data-menu-item-placement="bottom-end"
-                                                    data-menu-item-toggle="dropdown"
-                                                    data-menu-item-trigger="click|lg:click">
-                                                    <button
-                                                        class="menu-toggle btn btn-sm btn-icon btn-light btn-clear">
-                                                        <i class="ki-filled ki-dots-vertical">
-                                                        </i>
-                                                    </button>
-                                                    <div class="menu-dropdown menu-default w-full max-w-[175px]"
-                                                        data-menu-dismiss="true">
-                                                        <div class="menu-item">
-                                                            <a class="menu-link" href="#">
-                                                                <span class="menu-icon">
-                                                                    <i class="ki-filled ki-search-list">
-                                                                    </i>
-                                                                </span>
-                                                                <span class="menu-title">
-                                                                    View
-                                                                </span>
-                                                            </a>
-                                                        </div>
-                                                        <div class="menu-item">
-                                                            <a class="menu-link" href="#">
-                                                                <span class="menu-icon">
-                                                                    <i class="ki-filled ki-file-up">
-                                                                    </i>
-                                                                </span>
-                                                                <span class="menu-title">
-                                                                    Export
-                                                                </span>
-                                                            </a>
-                                                        </div>
-                                                        <div class="menu-separator">
-                                                        </div>
-                                                        <div class="menu-item">
-                                                            <a class="menu-link" href="#">
-                                                                <span class="menu-icon">
-                                                                    <i class="ki-filled ki-pencil">
-                                                                    </i>
-                                                                </span>
-                                                                <span class="menu-title">
-                                                                    Edit
-                                                                </span>
-                                                            </a>
-                                                        </div>
-                                                        <div class="menu-item">
-                                                            <a class="menu-link" href="#">
-                                                                <span class="menu-icon">
-                                                                    <i class="ki-filled ki-copy">
-                                                                    </i>
-                                                                </span>
-                                                                <span class="menu-title">
-                                                                    Make a copy
-                                                                </span>
-                                                            </a>
-                                                        </div>
-                                                        <div class="menu-separator">
-                                                        </div>
-                                                        <div class="menu-item">
-                                                            <a class="menu-link" href="#">
-                                                                <span class="menu-icon">
-                                                                    <i class="ki-filled ki-trash">
-                                                                    </i>
-                                                                </span>
-                                                                <span class="menu-title">
-                                                                    Remove
-                                                                </span>
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                {% endfor %}                                    
-                                
-                            </tbody>
-                        </table>
-                    </div>
-                    <div
-                        class="card-footer justify-center md:justify-between flex-col md:flex-row gap-5 text-gray-600 text-2sm font-medium">
-                        <div class="flex items-center gap-2 order-2 md:order-1">Show
-                            <select class="select select-sm w-16" data-datatable-size="true" name="perpage"></select> per page
-                        </div>
-                        <div class="flex items-center gap-4 order-1 md:order-2">
-                            <span data-datatable-info="true">
-                            </span>
-                            <div class="pagination" data-datatable-pagination="true">
+                        <div class="menu" data-menu="true">
+                            <div class="menu-item menu-item-dropdown" data-menu-item-offset="0, 10px" data-menu-item-placement="bottom-end" data-menu-item-toggle="dropdown" data-menu-item-trigger="click|lg:click">
+                                <button class="menu-toggle btn btn-light btn-clear"><i class="ki-filled ki-filter"></i> Filter by Class</button>
+                                <div class="menu-dropdown menu-default w-full max-w-[200px]" data-menu-dismiss="true">
+                                    <div class="menu-item">
+                                        <button class="menu-link filter-by-class" data-id="">
+                                            <span class="menu-icon"><i class="ki-filled ki-setting-3"></i></span>
+                                            <span class="menu-title">All</span>
+                                        </button>
+                                    </div>
+                                    {% for class in classes %}
+                                        <div class="menu-item">
+                                            <button class="menu-link filter-by-class" data-id="{{ class.id }}">
+                                                <span class="menu-icon"><i class="ki-filled ki-tick"></i></span>
+                                                <span class="menu-title">{{ class.name }}</span>
+                                            </button>
+                                        </div>
+                                    {% endfor %}
+                                </div>
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+            <div class="card-body">
+                
+                <div id="student_by_class">
+                    {% include 'account/includes/student_table.html' %}
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+
+<!-- <button class="btn btn-primary" data-modal-toggle="#student_details">Show Modal</button> -->
+<div class="modal" data-modal="false" id="student_details">
+    <div class="modal-content max-w-[600px] top-[20%]">
+        <div class="modal-header">
+            <button class="btn btn-xs btn-icon btn-light" data-modal-dismiss="true">
+                <i class="ki-outline ki-cross"></i>
+            </button>
+        </div>
+        <div class="modal-body" id="student_details_content">
+            
+        </div>
+    </div>
+</div>
 {% endblock content %}
 
 
 
 {% block extra_js %}
     <script>
-        const datatableEl = document.querySelector('#teacher_table');
-        const options = {
-            pageSize: 20,
-            stateSave: true
-        };
-        const datatable = new KTDataTable(datatableEl, options);
+        $(document).ready(function(e){
+            $('.student_search').val('');
+            function initializeDatatable() {
+                const datatableEl = document.querySelector('#student_table');
+                const options = {
+                    pageSize: 20,
+                    stateSave: true
+                };
+                return new KTDataTable(datatableEl, options);
+            }
+            let datatable = initializeDatatable();
+            var class_id = ''
+            var text = ''
+            
+            $('.filter-by-class').click(function(e){
+                e.preventDefault();
+                var button = $(this);
+                var classId = button.data('id');
+                class_id = classId;
+                $.ajax({
+                    type: 'GET',
+                    url: '{% url "student_by_class" %}',
+                    data: {
+                        'class_id': classId,
+                        'text': text
+                    },
+                    success: function(res){
+                        button.parent().siblings().find('.filter-by-class').removeClass('active');
+                        button.addClass('active');
+                        $('#student_by_class').empty();
+                        $('#student_by_class').html(res.html);
+                        initializeDatatable();
 
+                    }
+
+                });
+            });
+
+            $('.student_search').keyup(function(){
+                var texts = $(this).val();
+                text = texts
+                $.ajax({
+                    type: 'GET',
+                    url: '{% url "student_by_name" %}',
+                    data: {
+                        'class_id': class_id,
+                        'texts': texts
+                    },
+                    success: function(res){
+                        $('#student_by_class').empty();
+                        $('#student_by_class').html(res.html);
+                        initializeDatatable();
+                    }
+                });
+            });
+
+            const modalEl = document.querySelector('#student_details');
+            const modal = new KTModal(modalEl);
+
+            $(document).on('click', '.viwe_student', function(){
+                var studentId = $(this).data('id');
+                $.ajax({
+                    type: 'GET',
+                    url: '{% url "student_details" %}',
+                    data: {
+                        'student_id': studentId
+                    },
+                    success: function(res){
+                        console.log(res);
+                        modal.show();
+                    }
+                });                
+            });
+        });
     </script>
 {% endblock extra_js %}
     
