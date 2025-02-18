@@ -7,7 +7,7 @@
     <div class="flex [.header_&amp;]:below-lg:hidden items-center gap-1.25 text-xs lg:text-sm font-medium mb-2.5 lg:mb-0" data-reparent="true" data-reparent-mode="prepend|lg:prepend" data-reparent-target="#content_container|lg:#header_container">
         <span class="text-gray-600">Dashboard</span>
         <i class="ki-filled ki-right text-gray-500 text-3xs"></i>
-        <span class="text-gray-700">{{ class.name }}</span>
+        <span class="text-gray-700">{{ schedule.grade.name }}</span>
     </div>
 {% endblock breadcrumb %}
 
@@ -16,7 +16,7 @@
     <div class="container-fixed">
         <div class="flex flex-wrap items-center lg:items-end justify-between gap-5 pb-7.5">
             <div class="flex flex-col justify-center gap-2">
-                <h1 class="text-xl font-semibold leading-none text-gray-900">{{ class.name }}</h1>
+                <h1 class="text-xl font-semibold leading-none text-gray-900">{{ schedule.grade.name }}</h1>
                 <div class="flex items-center gap-2 text-sm font-medium text-gray-600">Settings</div>
             </div>
             {% comment %} <div class="flex items-center gap-2.5">
@@ -37,7 +37,7 @@
         
         <div class="card card-grid mt-5">
             <div class="card-header flex-wrap gap-2" id="all_student">
-                <h2 class="card-title font-medium text-md">All Students of {{ class.name }}</h2>
+                <h2 class="card-title font-medium text-md">All Students of {{ schedule.grade.name }}</h2>
                     <div class="flex">
                     <label class="input input-sm">
                         <i class="ki-filled ki-magnifier"></i>
@@ -64,24 +64,21 @@
                                             <tr>
                                                 <td>
                                                     <div class="flex items-center gap-2.5">
-                                                        {% if student.user.profile_image %}
-                                                            <img alt="{{ student.user.get_full_name }}" class="rounded-full size-9 shrink-0" src="/media/{{ student.user.profile_image }}" />
+                                                        {% if student.profile_image %}
+                                                            <img alt="{{ student.get_full_name }}" class="rounded-full size-9 shrink-0" src="/media/{{ student.profile_image }}" />
                                                         {% else %}
-                                                            <img alt="{{ student.user.get_full_name }}" class="rounded-full size-9 shrink-0" src="/static/media/avatars/300-2.png">
+                                                            <img alt="{{ student.get_full_name }}" class="rounded-full size-9 shrink-0" src="/static/media/avatars/300-2.png">
                                                         {% endif %}
                                                         <div class="flex flex-col">
-                                                            <a href="#" class="text-sm font-semibold text-gray-900 mb-px">{{ student.user.get_full_name }}</a>
-                                                            <span class="text-2sm font-medium text-gray-600 hover:text-primary-active">{{ student.user.username }}</span>
+                                                            <a href="#" class="text-sm font-semibold text-gray-900 mb-px">{{ student.get_full_name }}</a>
+                                                            <span class="text-2sm font-medium text-gray-600 hover:text-primary-active">{{ student.username }}</span>
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td>{{ student.total_roll }}</td>
+                                                <td>{{ student.student_profile.total_roll }}</td>
                                                 <td>
                                                     <label class="switch">
-                                                        <!-- Hidden input for unchecked state (defaults to 0) -->
-                                                        <input type="hidden" name="att_{{ student.id }}" value="0">
-                                                        <!-- Checked input -->
-                                                        <input class="status" name="att_{{ student.id }}" type="checkbox" checked value="1">
+                                                        <input type="checkbox" name="att_{{ student.id }}" checked value="1">
                                                     </label>
                                                 </td>
                                             </tr>

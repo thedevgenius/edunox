@@ -1,19 +1,18 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, Permission
 
 # Create your models here.
 
-class Access(models.Model):
-    name = models.CharField(max_length=200)
-    code = models.CharField(max_length=200, unique=True)
+# class Access(models.Model):
+#     name = models.CharField(max_length=200)
+#     code = models.CharField(max_length=200, unique=True)
 
-    def __str__(self):
-        return self.name
+#     def __str__(self):
+#         return self.name
 
 class Role(models.Model):
-    name = models.CharField(max_length=100)
-    code = models.CharField(max_length=5, unique=True)
-    accesses = models.ManyToManyField('Access', blank=True)
+    name = models.CharField(max_length=50, unique=True)
+    permissions = models.ManyToManyField(Permission, blank=True)
 
     def __str__(self):
         return self.name
@@ -52,7 +51,7 @@ class User(AbstractUser):
         ('O', 'Other')
     )
     
-    role = models.ForeignKey(Role, on_delete=models.CASCADE, null=True)
+    role = models.ManyToManyField(Role, blank=True)
     type = models.CharField(max_length=5, choices=USER_TYPE, default='ST')
     date_of_birth = models.DateField(null=True)
     date_joined = models.DateField(auto_now_add=True)
@@ -72,7 +71,14 @@ class User(AbstractUser):
     #     self.set_password(self.password)
     #     super().save(*args, **kwargs)
 
+    def has_permission(self, perm_codename):
+        """Check if user has a specific permission."""
+        return self.role.filter(permissions__codename=perm_codename).exists()
+    def has_role(self, role_name):
+        return self.role.filter(name=role_name).exists()
+
     
+
 class TeacherProfile(models.Model):
     STATUS_CHOICE = (
         ('IO', 'In Office'),

@@ -49,11 +49,6 @@ def logout_view(request):
 class TeacherListView(LoginRequiredMixin, TemplateView):
     template_name = 'account/teacher_list.html'
 
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.role.accesses.filter(name='View Teacher').exists():
-            return redirect('dashboard')
-        return super().dispatch(request, *args, **kwargs)
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         teachers = User.objects.filter(type='TE').select_related('teacher_profile').order_by('first_name')

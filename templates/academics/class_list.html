@@ -36,6 +36,7 @@
                             </div>
                             <div class="card-footer justify-center">
                                 <a href="{% url 'class_details' grade.pk %}" class="btn btn-primary btn-sm">View Details</a>
+                                <a href="{% url 'attendance_add' grade.pk %}">Add Attendance</a>
                             </div>
                         </div>
                     {% endfor %}

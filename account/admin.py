@@ -1,11 +1,14 @@
 from django.contrib import admin
-from .models import Role, Access, User, TeacherProfile, StudentProfile
+from .models import Role, User, TeacherProfile, StudentProfile
 
 # Register your models here.
-admin.site.register(Access)
-admin.site.register(User)
+# admin.site.register(User)
 admin.site.register(TeacherProfile)
 admin.site.register(Role)
+
+class UserAdmin(admin.ModelAdmin):
+    list_display = ['first_name', 'last_name', 'username']
+admin.site.register(User, UserAdmin)
 
 
 

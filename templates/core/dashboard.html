@@ -1,10 +1,119 @@
 {% extends 'base_site.html' %}
+{% load acc_filter %}
 
-{% block title %}Dashboard{% endblock %}
+{% block title %}Dashboard | EdunoX{% endblock %}
 
 {% block content %}
+    <style>
+        .channel-stats-bg {
+            background-image: url('/static/media/images/2600x1600/bg-3.png');
+        }
+
+        .dark .channel-stats-bg {
+            background-image: url('/static/media/images/2600x1600/bg-3-dark.png');
+        }
+    </style>
     <div class="container-fixed">
-        <h1>Dashboard</h1>
+        <div class="flex flex-wrap items-center lg:items-end justify-between gap-5 pb-7.5">
+            <div class="flex flex-col justify-center gap-2">
+                <h1 class="text-xl font-medium leading-none text-gray-900">Welcome Back, {{ user.get_full_name }}</h1>
+                <div class="flex items-center gap-2 text-sm font-normal text-gray-700">
+                    Central Hub for Your Institute
+                </div>
+            </div>
+        </div>
     </div>
+    {% if user|has_role:'Admin' %}
+        <div class="container-fixed">
+            <div class="grid grid-cols-2 gap-5">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Students</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="grid grid-cols-2 gap-5">
+                            <div class="card flex-col justify-between gap-6 h-full bg-cover rtl:bg-[left_top_-1.7rem] bg-[right_top_-1.7rem] bg-no-repeat channel-stats-bg">
+                                <img alt="" class="w-7 mt-4 ms-5" src="/static/media/brand-logos/linkedin-2.svg">
+                                <div class="flex flex-col gap-1 pb-4 px-5">
+                                    <span class="text-3xl font-semibold text-gray-900">{{ total_student }}</span>
+                                    <span class="text-2sm font-normal text-gray-700">Total Student</span>
+                                </div>
+                            </div>
+                            <div class="card flex-col justify-between gap-6 h-full bg-cover rtl:bg-[left_top_-1.7rem] bg-[right_top_-1.7rem] bg-no-repeat channel-stats-bg">
+                                <img alt="" class="w-7 mt-4 ms-5" src="/static/media/brand-logos/youtube-2.svg">
+                                <div class="flex flex-col gap-1 pb-4 px-5">
+                                    <span class="text-3xl font-semibold text-gray-900">{{ total_male_student }}</span>
+                                    <span class="text-2sm font-normal text-gray-700">Male</span>
+                                </div>
+                            </div>
+                            <div class="card flex-col justify-between gap-6 h-full bg-cover rtl:bg-[left_top_-1.7rem] bg-[right_top_-1.7rem] bg-no-repeat channel-stats-bg">
+                                <img alt="" class="w-7 mt-4 ms-5" src="/static/media/brand-logos/instagram-03.svg">
+                                <div class="flex flex-col gap-1 pb-4 px-5">
+                                    <span class="text-3xl font-semibold text-gray-900">{{ total_female_student }}</span>
+                                    <span class="text-2sm font-normal text-gray-700">Female</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    {% if user|has_role:'Teacher' %}
+        <div class="container-fixed">
+            <div class="grid grid-cols-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Today Schedule</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="grid grid-cols-3">
+                            {% for schedule in schedules %}
+                                <div class="card flex-col justify-between gap-6">
+                                    <div class="flex flex-col gap-1 py-4 px-5">
+                                        <span class="text-2sm font-medium text-gray-700">{{ schedule.period }}</span>
+                                        <span class="text-3xl font-semibold text-gray-900">{{ schedule.grade }}</span>
+                                        <span class="text-2sm font-normal text-gray-700">{{ schedule.subject.name }}</span>
+                                        {% if schedule.period == '1' %}
+                                            <a href="{% url 'attendance_add' schedule.id %}" class="btn btn-sm btn-primary text-center">Add Attendance</a>   
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
 {% endblock content %}
+    
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+<script>
+    // fetch('/get-student-by-gender/')  // Endpoint from Django
+    // .then(response => response.json())
+    // .then(data => {
+    //     new Chart("myChart", {
+    //         type: "doughnut",
+    //         data: {
+    //             labels: data.labels,
+    //             datasets: [{
+    //                 backgroundColor: data.colors,
+    //                 data: data.values
+    //             }]
+    //         },
+    //         options: {
+    //             title: {
+    //                 display: false,
+    //                 text: "Dynamic Gender Distribution"
+    //             }
+    //         }
+    //     });
+    // })
+    // .catch(error => console.error("Error fetching chart data:", error));
+</script>
+{% endblock extra_js %}
     
