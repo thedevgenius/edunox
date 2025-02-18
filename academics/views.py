@@ -1,5 +1,7 @@
 from collections import defaultdict
+from datetime import datetime
 
+from django.shortcuts import redirect
 from django.contrib import messages
 from django.db import IntegrityError
 from django.http import JsonResponse
@@ -8,7 +10,7 @@ from django.views.generic import TemplateView, DetailView, View
 
 from account.models import StudentProfile, User
 from .forms import AddScheduleForm
-from .models import Grade, Subject, Schedule
+from .models import Grade, Subject, Schedule, Attendance
 
 
 # Create your views here.
@@ -40,9 +42,6 @@ class ClassDetailView(DetailView):
             grouped_schedules[schedule.day].append(schedule)
         context['grouped_schedules'] = dict(grouped_schedules)
 
-        
-        days = {1, 2, 3, 4, 5, 6, 7, 8}
-        context['days'] = days
         return context
 
     def post(self, request, *args, **kwargs):
@@ -62,10 +61,28 @@ class ClassDetailView(DetailView):
         else:
             print(form.errors)
         return self.get(request, *args, **kwargs) 
-       
-class ScheduleView(View):
-    def get(self, request, *args, **kwargs):
-        day = request.GET.get('day')
-        period = request.GET.get('period')
-        print(day, period)
-        return JsonResponse({'success' : True})
+
+class AddAttendanceView(TemplateView):
+    template_name = 'academics/attendance_add.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['class'] = Grade.objects.get(id=self.kwargs['pk'])
+        context['students'] = StudentProfile.objects.filter(grade=context['class']).order_by('total_roll')
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        students = User.objects.filter(student_profile__grade=Grade.objects.get(id=self.kwargs['pk']))
+        now = datetime.now()
+        attendance = []
+        attendance_data = {}
+
+        for student in students:
+            checkbox_value = request.POST.get(f"att_{student.id}", "0")
+            attendance_data[student.id] = True if checkbox_value == "1" else False
+        print("Attendance Data:", attendance_data)
+            # status = True if att == "on" else False
+            # print(student, status)
+            # attendance.append(Attendance(date=now, student=student, status=status))
+        # Attendance.objects.bulk_create(attendance)
+        return redirect('dashboard')

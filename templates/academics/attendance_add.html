@@ -1,0 +1,113 @@
+{% extends 'base_site.html' %}
+{% load my_tags %}
+
+{% block title %}Classes | Edunox{% endblock title %}
+
+{% block breadcrumb %}
+    <div class="flex [.header_&amp;]:below-lg:hidden items-center gap-1.25 text-xs lg:text-sm font-medium mb-2.5 lg:mb-0" data-reparent="true" data-reparent-mode="prepend|lg:prepend" data-reparent-target="#content_container|lg:#header_container">
+        <span class="text-gray-600">Dashboard</span>
+        <i class="ki-filled ki-right text-gray-500 text-3xs"></i>
+        <span class="text-gray-700">{{ class.name }}</span>
+    </div>
+{% endblock breadcrumb %}
+
+
+{% block content %}
+    <div class="container-fixed">
+        <div class="flex flex-wrap items-center lg:items-end justify-between gap-5 pb-7.5">
+            <div class="flex flex-col justify-center gap-2">
+                <h1 class="text-xl font-semibold leading-none text-gray-900">{{ class.name }}</h1>
+                <div class="flex items-center gap-2 text-sm font-medium text-gray-600">Settings</div>
+            </div>
+            {% comment %} <div class="flex items-center gap-2.5">
+                <a class="btn btn-sm btn-light" href="#">Public Profile</a>
+                <a class="btn btn-sm btn-primary" href="#">Get Started</a>/static/media/
+            </div> {% endcomment %}
+        </div>
+    </div>
+    <div class="container-fixed">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="bg-danger p-2 mb-5 text-light ">
+                    {{ message }}
+                </div>
+            {% endfor %} 
+        {% endif %}
+
+        
+        <div class="card card-grid mt-5">
+            <div class="card-header flex-wrap gap-2" id="all_student">
+                <h2 class="card-title font-medium text-md">All Students of {{ class.name }}</h2>
+                    <div class="flex">
+                    <label class="input input-sm">
+                        <i class="ki-filled ki-magnifier"></i>
+                        <input placeholder="Search users" type="text" value="">
+                    </label>
+                </div>  
+            </div>
+            <div class="card-body">
+                {% if students %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <div data-datatable="false" id="student_table">
+                            <div class="scrollable-x-auto">
+                                <table class="table table-auto table-border" data-datatable-table="true">
+                                    <thead>
+                                        <tr>
+                                            <th class="min-w-[300px]">Name</th>
+                                            <th class="min-w-[180px]">Roll No.</th>
+                                            <th class="min-w-[180px]">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for student in students %}
+                                            <tr>
+                                                <td>
+                                                    <div class="flex items-center gap-2.5">
+                                                        {% if student.user.profile_image %}
+                                                            <img alt="{{ student.user.get_full_name }}" class="rounded-full size-9 shrink-0" src="/media/{{ student.user.profile_image }}" />
+                                                        {% else %}
+                                                            <img alt="{{ student.user.get_full_name }}" class="rounded-full size-9 shrink-0" src="/static/media/avatars/300-2.png">
+                                                        {% endif %}
+                                                        <div class="flex flex-col">
+                                                            <a href="#" class="text-sm font-semibold text-gray-900 mb-px">{{ student.user.get_full_name }}</a>
+                                                            <span class="text-2sm font-medium text-gray-600 hover:text-primary-active">{{ student.user.username }}</span>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>{{ student.total_roll }}</td>
+                                                <td>
+                                                    <label class="switch">
+                                                        <!-- Hidden input for unchecked state (defaults to 0) -->
+                                                        <input type="hidden" name="att_{{ student.id }}" value="0">
+                                                        <!-- Checked input -->
+                                                        <input class="status" name="att_{{ student.id }}" type="checkbox" checked value="1">
+                                                    </label>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                        </div>
+                        <button type="submit" class="btn btn-primary">SAVE</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+
+        
+
+    </div>
+{% endblock content %}
+
+{% block extra_js %}
+    <script>
+        $(document).ready(function () {
+
+});
+
+
+    </script>
+{% endblock extra_js %}

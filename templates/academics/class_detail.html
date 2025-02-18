@@ -34,165 +34,139 @@
             {% endfor %} 
         {% endif %}
 
-        <div class="flex grow gap-5 lg:gap-7.5">
-            <div class="hidden lg:block w-[230px] shrink-0">
-                <div class="w-[230px]" data-sticky="true" data-sticky-animation="true" data-sticky-class="fixed top-[calc(var(--tw-header-height)+1.875rem)] z-10 left-auto" data-sticky-name="scrollspy" data-sticky-offset="200">
-                    <div class="flex flex-col grow relative before:absolute before:left-[11px] before:top-0 before:bottom-0 before:border-l before:border-gray-200" data-scrollspy="true" data-scrollspy-offset="80px|lg:110px" data-scrollspy-target="body">
-                        
-                        <a href="#all_student" class="flex items-center rounded-lg pl-2.5 pr-2.5 py-2.5 gap-1.5 active border border-transparent text-2sm font-medium text-gray-700 hover:text-primary scrollspy-active:bg-secondary-active scrollspy-active:text-primary dark:hover:bg-coal-300 dark:hover:border-gray-100 hover:rounded-lg dark:scrollspy-active:bg-coal-300 dark:scrollspy-active:border-gray-100" data-scrollspy-anchor="true">
-                            <span class="flex w-1.5 relative before:absolute before:top-0 before:left-px before:size-1.5 before:rounded-full before:-translate-x-2/4 before:-translate-y-2/4 scrollspy-active:before:bg-primary"></span>
-                            All Students
-                        </a>
-                        <a href="#schedule" class="flex items-center rounded-lg pl-2.5 pr-2.5 py-2.5 gap-1.5 border border-transparent text-2sm font-medium text-gray-700 hover:text-primary scrollspy-active:bg-secondary-active scrollspy-active:text-primary dark:hover:bg-coal-300 dark:hover:border-gray-100 hover:rounded-lg dark:scrollspy-active:bg-coal-300 dark:scrollspy-active:border-gray-100" data-scrollspy-anchor="true">
-                            <span class="flex w-1.5 relative before:absolute before:top-0 before:left-px before:size-1.5 before:rounded-full before:-translate-x-2/4 before:-translate-y-2/4 scrollspy-active:before:bg-primary"></span>
-                            Schedule
-                        </a>
-                        <a href="#subjects" class="flex items-center rounded-lg pl-2.5 pr-2.5 py-2.5 gap-1.5 border border-transparent text-2sm font-medium text-gray-700 hover:text-primary scrollspy-active:bg-secondary-active scrollspy-active:text-primary dark:hover:bg-coal-300 dark:hover:border-gray-100 hover:rounded-lg dark:scrollspy-active:bg-coal-300 dark:scrollspy-active:border-gray-100" data-scrollspy-anchor="true">
-                            <span class="flex w-1.5 relative before:absolute before:top-0 before:left-px before:size-1.5 before:rounded-full before:-translate-x-2/4 before:-translate-y-2/4 scrollspy-active:before:bg-primary"></span>
-                            Subjects
-                        </a>
-
-                    </div>
-                </div>
+        <div class="card">
+            <div class="card-header flex-wrap gap-2" id="schedule">
+                <h2 class="card-title font-medium text-md">Schedule</h2> 
             </div>
-            <div class="flex flex-col items-stretch grow gap-5 lg:gap-7.5">
-
-                <div class="card card-grid min-w-full">
-                    <div class="card-header flex-wrap gap-2" id="all_student">
-                        <h2 class="card-title font-medium text-md">All Students of {{ class.name }}</h2>
-                            <div class="flex">
-                            <label class="input input-sm">
-                                <i class="ki-filled ki-magnifier"></i>
-                                <input placeholder="Search users" type="text" value="">
-                            </label>
-                        </div>  
-                    </div>
-                    <div class="card-body">
-                        {% if students %}
-                            <div data-datatable="false" id="student_table">
-                                <div class="scrollable-x-auto">
-                                    <table class="table table-auto table-border" data-datatable-table="true">
-                                        <thead>
-                                            <tr>
-                                                <th class="min-w-[300px]">
-                                                    <span class="sort asc">
-                                                        <span class="sort-label"> Name</span>
-                                                        <span class="sort-icon"></span>
-                                                    </span>
-                                                </th>
-                                                <th class="min-w-[180px]">Father Name</th>
-                                                <th class="min-w-[180px]">Roll No.</th>
-                                                <th class="min-w-[180px]">Overall Roll No.</th>
-                                                <!-- <th class="w-[60px]">Action</th> -->
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for student in students %}
-                                                <tr>
-                                                    <td>
-                                                        <div class="flex items-center gap-2.5">
-                                                            {% if student.user.profile_image %}
-                                                                <img alt="{{ student.user.get_full_name }}" class="rounded-full size-9 shrink-0" src="/media/{{ student.user.profile_image }}" />
-                                                            {% else %}
-                                                                <img alt="{{ student.user.get_full_name }}" class="rounded-full size-9 shrink-0" src="/static/media/avatars/300-2.png">
-                                                            {% endif %}
-                                                            <div class="flex flex-col">
-                                                                <a href="#" class="text-sm font-semibold text-gray-900 mb-px">{{ student.user.get_full_name }}</a>
-                                                                <span class="text-2sm font-medium text-gray-600 hover:text-primary-active">{{ student.user.username }}</span>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>{{ student.father_name }}</td>
-                                                    <td>{{ student.roll }}</td>
-                                                    <td>{{ student.total_roll }}</td>
-                                                </tr>
-                                            {% endfor %}                                    
-                                            
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="card-footer justify-center md:justify-between flex-col md:flex-row gap-5 text-gray-600 text-2sm font-medium">
-                                    <div class="flex items-center gap-2 order-2 md:order-1">Show
-                                        <select class="select select-sm w-16" data-datatable-size="true" name="perpage"></select> per page
-                                    </div>
-                                    <div class="flex items-center gap-4 order-1 md:order-2">
-                                        <span data-datatable-info="true"></span>
-                                        <div class="pagination" data-datatable-pagination="true"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        {% endif %}
-                    </div>
-                </div>
-
-                <div class="card min-w-full">
-                    <div class="card-header flex-wrap gap-2" id="schedule">
-                        <h2 class="card-title font-medium text-md">Schedule</h2> 
-                    </div>
-                    <div class="card-body">
-                        <table class="table table-auto table-border mb-5" id="schedule_table">
-                            <thead>
-                                <tr>
-                                    <th>Day</th>
-                                    <th>1</th>
-                                    <th>2</th>
-                                    <th>3</th>
-                                    <th>4</th>
-                                    <th>5</th>
-                                    <th>6</th>
-                                    <th>7</th>
-                                    <th>8</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Monday</td>
-                                    <td data-day="MN" data-period="1" class="schedule"></td>
-                                    <td data-day="MN" data-period="2" class="schedule"></td>
-                                    <td data-day="MN" data-period="3" class="schedule"></td>
-                                    <td data-day="MN" data-period="4" class="schedule"></td>
-                                    <td data-day="MN" data-period="5" class="schedule"></td>
-                                    <td data-day="MN" data-period="6" class="schedule"></td>
-                                </tr>
-                            </tbody>
-                        </table>
+            <div class="card-body">
+                <table class="table table-auto table-border mb-5" id="schedule_table">
+                    <thead>
+                        <tr>
+                            <th>Day</th>
+                            <th>1</th>
+                            <th>2</th>
+                            <th>3</th>
+                            <th>4</th>
+                            <th>5</th>
+                            <th>6</th>
+                            <!-- <th>7</th>
+                            <th>8</th> -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        {% for day, schedules in grouped_schedules.items %}
+                            <tr>
+                                <td>{{ day }}</td>
+                                {% for schedule in schedules %}
+                                    <td>
+                                        {{ schedule.subject.name }} <br>
+                                        {{ schedule.teacher }}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
                             
-                            
-                    </div>
-                </div>
-
-                <div class="card card-grid min-w-full">
-                    <div class="card-header flex-wrap gap-2" id="subjects">
-                        <h2 class="card-title font-medium text-md">All Subjects</h2> 
-                    </div>
-                    <div class="card-body">
-                        <div>
-                            <div class="scrollable-x-auto">
-                                <table class="table table-auto table-border">
-                                    <thead>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card card-grid mt-5">
+            <div class="card-header flex-wrap gap-2" id="all_student">
+                <h2 class="card-title font-medium text-md">All Students of {{ class.name }}</h2>
+                    <div class="flex">
+                    <label class="input input-sm">
+                        <i class="ki-filled ki-magnifier"></i>
+                        <input placeholder="Search users" type="text" value="">
+                    </label>
+                </div>  
+            </div>
+            <div class="card-body">
+                {% if students %}
+                    <div data-datatable="false" id="student_table">
+                        <div class="scrollable-x-auto">
+                            <table class="table table-auto table-border" data-datatable-table="true">
+                                <thead>
+                                    <tr>
+                                        <th class="min-w-[300px]">
+                                            <span class="sort asc">
+                                                <span class="sort-label"> Name</span>
+                                                <span class="sort-icon"></span>
+                                            </span>
+                                        </th>
+                                        <th class="min-w-[180px]">Father Name</th>
+                                        <th class="min-w-[180px]">Roll No.</th>
+                                        <th class="min-w-[180px]">Overall Roll No.</th>
+                                        <!-- <th class="w-[60px]">Action</th> -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for student in students %}
                                         <tr>
-                                            <th class="min-w-[300px]">Subject Name</th>
-                                            <th class="min-w-[180px]">Subject Code</th>
+                                            <td>
+                                                <div class="flex items-center gap-2.5">
+                                                    {% if student.user.profile_image %}
+                                                        <img alt="{{ student.user.get_full_name }}" class="rounded-full size-9 shrink-0" src="/media/{{ student.user.profile_image }}" />
+                                                    {% else %}
+                                                        <img alt="{{ student.user.get_full_name }}" class="rounded-full size-9 shrink-0" src="/static/media/avatars/300-2.png">
+                                                    {% endif %}
+                                                    <div class="flex flex-col">
+                                                        <a href="#" class="text-sm font-semibold text-gray-900 mb-px">{{ student.user.get_full_name }}</a>
+                                                        <span class="text-2sm font-medium text-gray-600 hover:text-primary-active">{{ student.user.username }}</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>{{ student.father_name }}</td>
+                                            <td>{{ student.roll }}</td>
+                                            <td>{{ student.total_roll }}</td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for sub in subjects %}
-                                            <tr>
-                                                <td>{{ sub.name }}</td>
-                                                <td>{{ sub.code }}</td>
-                                            </tr>
-                                        {% endfor %}                                    
-                                    </tbody>
-                                </table>
+                                    {% endfor %}                                    
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="card-footer justify-center md:justify-between flex-col md:flex-row gap-5 text-gray-600 text-2sm font-medium">
+                            <div class="flex items-center gap-2 order-2 md:order-1">Show
+                                <select class="select select-sm w-16" data-datatable-size="true" name="perpage"></select> per page
+                            </div>
+                            <div class="flex items-center gap-4 order-1 md:order-2">
+                                <span data-datatable-info="true"></span>
+                                <div class="pagination" data-datatable-pagination="true"></div>
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                
-
+                {% endif %}
             </div>
         </div>
+
+        <div class="card card-grid">
+            <div class="card-header flex-wrap gap-2" id="subjects">
+                <h2 class="card-title font-medium text-md">All Subjects</h2> 
+            </div>
+            <div class="card-body">
+                <div>
+                    <div class="scrollable-x-auto">
+                        <table class="table table-auto table-border">
+                            <thead>
+                                <tr>
+                                    <th class="min-w-[300px]">Subject Name</th>
+                                    <th class="min-w-[180px]">Subject Code</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for sub in subjects %}
+                                    <tr>
+                                        <td>{{ sub.name }}</td>
+                                        <td>{{ sub.code }}</td>
+                                    </tr>
+                                {% endfor %}                                    
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 {% endblock content %}
 
@@ -206,21 +180,7 @@
         const datatable = new KTDataTable(datatableEl, options);
 
         $(document).ready(function(){
-            $('#schedule_table tbody tr td.schedule').each(function(){
-                var day = $(this).data('day');
-                var period = $(this).data('period');
-                $.ajax({
-                    type: 'GET',
-                    url: '{% url "get_schedule" %}',
-                    data:{
-                        'day' : day,
-                        'period' : period
-                    },
-                    success: function(res){
-                        console.log(res);
-                    }
-                });
-            });
+            
             
         });
     </script>

@@ -15,7 +15,6 @@ class Grade(models.Model):
         students = StudentProfile.objects.filter(grade=self)
         return students.count()
 
-
 class Subject(models.Model):
     name = models.CharField(max_length=50)
     code = models.CharField(max_length=10, unique=True)
@@ -54,3 +53,15 @@ class Schedule(models.Model):
 
     def __str__(self):
         return f'{self.grade.name} - {self.day} {self.period} - {self.subject.name}'
+
+class Attendance(models.Model):
+    date = models.DateField()
+    student = models.ForeignKey(User, on_delete=models.CASCADE, related_name="attendance", limit_choices_to={'type' : 'ST'})
+    status = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f'{str(self.date)} - {self.student.get_full_name()} - {self.status}'
+    
+    class Meta:
+        verbose_name_plural = 'Attendance'
+        unique_together = (('date', 'student'),)
