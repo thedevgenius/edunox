@@ -65,6 +65,7 @@
                 </table>
             </div>
         </div>
+
         <div class="card card-grid mt-5">
             <div class="card-header flex-wrap gap-2" id="all_student">
                 <h2 class="card-title font-medium text-md">All Students of {{ class.name }}</h2>
@@ -133,7 +134,7 @@
             </div>
         </div>
 
-        <div class="card card-grid">
+        <div class="card card-grid mt-5">
             <div class="card-header flex-wrap gap-2" id="subjects">
                 <h2 class="card-title font-medium text-md">All Subjects</h2> 
             </div>
@@ -160,6 +161,37 @@
                 </div>
             </div>
         </div>
+
+        <div class="card card-grid mt-5">
+            <div class="card-header flex-wrap gap-2" id="subjects">
+                <h2 class="card-title font-medium text-md">All Subjects</h2> 
+            </div>
+            <div class="card-body">
+                <div>
+                    <div class="scrollable-x-auto">
+                        <table class="table table-auto table-border">
+                            <thead>
+                                <tr>
+                                    <th class="min-w-[300px]">Fee Name</th>
+                                    <th class="min-w-[180px]">Price</th>
+                                    <th class="min-w-[180px]">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for fee in fees %}
+                                    <tr>
+                                        <td>{{ fee.type }}</td>
+                                        <td>{{ fee.amount }}</td>
+                                        <td>{{ fee.status }}</td>
+                                    </tr>
+                                {% endfor %}                                    
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
     </div>
 {% endblock content %}

@@ -11,6 +11,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 
 from account.models import StudentProfile, User
+from payment.models import Fees
 from .forms import AddScheduleForm
 from .models import Grade, Subject, Schedule, Attendance
 
@@ -44,6 +45,8 @@ class ClassDetailView(DetailView):
             grouped_schedules[schedule.day].append(schedule)
         context['grouped_schedules'] = dict(grouped_schedules)
 
+        fees = Fees.objects.filter(grade=grade)
+        context['fees'] = fees
         return context
 
     def post(self, request, *args, **kwargs):

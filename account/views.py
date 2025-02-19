@@ -1,33 +1,23 @@
-from django.shortcuts import render, redirect
-from django.http import JsonResponse
-from django.contrib.auth.views import LoginView
-from django.views.generic import TemplateView, View
-from django.views.generic import DetailView
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse_lazy
-from django.contrib.auth import logout
-from django.db.models import Count
 from datetime import datetime
-from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required
-from .forms import LoginForm, AddTeacherForm, AddStudentForm
-from .models import TeacherProfile, StudentProfile, User, Role
-from academics.models import Grade
-from django.template.loader import render_to_string
 
-def student_filter(class_id, name):
-    if class_id and name:
-        grade = Grade.objects.get(id=class_id)
-        students = User.objects.filter(type='ST', student_profile__grade=grade, first_name__startswith=name).select_related('student_profile').order_by('student_profile__total_roll')
-    elif class_id and not name:
-        grade = Grade.objects.get(id=class_id)
-        students = User.objects.filter(type='ST', student_profile__grade=grade).select_related('student_profile').order_by('student_profile__total_roll')
-    elif name and not class_id:
-        students = User.objects.filter(type='ST', first_name__startswith=name).select_related('student_profile').order_by('student_profile__total_roll')
-    else:
-        students = User.objects.filter(type='ST').select_related('student_profile').order_by('first_name')
-    
-    return students
+from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView
+from django.db.models import Count
+from django.http import JsonResponse
+from django.shortcuts import render, redirect
+from django.template.loader import render_to_string
+from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views.generic import DetailView, TemplateView, View
+
+from .forms import AddStudentForm, AddTeacherForm, LoginForm
+from .models import Role, StudentProfile, TeacherProfile, User
+from .utils import student_filter
+from academics.models import Grade
+
+
     
     
 
@@ -63,11 +53,6 @@ class TeacherListView(LoginRequiredMixin, TemplateView):
 @method_decorator(login_required, name='dispatch')
 class AddTeacherView(TemplateView):
     template_name = 'account/teacher_add.html'
-
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.role.accesses.filter(name='Add Teacher').exists():
-            return redirect('home')
-        return super().dispatch(request, *args, **kwargs)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -200,6 +185,7 @@ class StudentListByClassView(View):
         html = render_to_string('account/includes/student_table.html', {'students' : students})
         return JsonResponse({'success': True, 'html': html})
 
+
 @method_decorator(login_required, name='dispatch')
 class StudentListByNameView(View):
     def get(self, request, *args, **kwargs):
@@ -208,7 +194,6 @@ class StudentListByNameView(View):
         students = student_filter(class_id=class_id, name=texts)
         html = render_to_string('account/includes/student_table.html', {'students' : students})
         return JsonResponse({'success': True, 'html': html})
-
 
 
 @method_decorator(login_required, name='dispatch')
