@@ -100,15 +100,18 @@
             $('.student_search').val('');
             function initializeDatatable() {
                 const datatableEl = document.querySelector('#student_table');
-                const options = {
-                    pageSize: 20,
-                    stateSave: true
-                };
-                return new KTDataTable(datatableEl, options);
+                if (datatableEl) {
+                    const options = {
+                        pageSize: 20,
+                        stateSave: true
+                    };
+                    return new KTDataTable(datatableEl, options);
+                }
+                return null;
             }
             let datatable = initializeDatatable();
-            var class_id = ''
-            var text = ''
+            var class_id = '';
+            var text = '';
             
             $('.filter-by-class').click(function(e){
                 e.preventDefault();
@@ -123,12 +126,12 @@
                         'text': text
                     },
                     success: function(res){
+                        console.log(res.html);
                         button.parent().siblings().find('.filter-by-class').removeClass('active');
                         button.addClass('active');
                         $('#student_by_class').empty();
                         $('#student_by_class').html(res.html);
                         initializeDatatable();
-
                     }
 
                 });
@@ -152,23 +155,7 @@
                 });
             });
 
-            const modalEl = document.querySelector('#student_details');
-            const modal = new KTModal(modalEl);
-
-            $(document).on('click', '.viwe_student', function(){
-                var studentId = $(this).data('id');
-                $.ajax({
-                    type: 'GET',
-                    url: '{% url "student_details" %}',
-                    data: {
-                        'student_id': studentId
-                    },
-                    success: function(res){
-                        console.log(res);
-                        modal.show();
-                    }
-                });                
-            });
+            
         });
     </script>
 {% endblock extra_js %}

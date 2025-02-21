@@ -198,7 +198,6 @@ class StudentListByNameView(View):
 
 @method_decorator(login_required, name='dispatch')
 class StudentDetailsView(DetailView):
-    def get(self, request, *args, **kwargs):
-        student_id = request.GET.get('student_id')
-        student_profile = StudentProfile.objects.select_related('user').get(user__id=student_id)
-        return JsonResponse({'success': True})
+    model = User
+    context_object_name = 'student'
+    template_name = 'account/includes/student_details.html'

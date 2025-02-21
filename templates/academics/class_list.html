@@ -34,9 +34,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="card-footer justify-center">
+                            <div class="card-footer justify-center flex gap-4">
                                 <a href="{% url 'class_details' grade.pk %}" class="btn btn-primary btn-sm">View Details</a>
-                                <a href="{% url 'attendance_add' grade.pk %}">Add Attendance</a>
+                                <a href="{% url 'attendance_add' grade.pk %}" class="btn btn-light btn-sm">Add Attendance</a>
                             </div>
                         </div>
                     {% endfor %}

@@ -1,0 +1,122 @@
+{% extends 'base_site.html' %}
+
+{% block title %}Student List | EdunoX{% endblock %}
+
+{% block breadcrumb %}
+    <div class="flex [.header_&amp;]:below-lg:hidden items-center gap-1.25 text-xs lg:text-sm font-medium mb-2.5 lg:mb-0" data-reparent="true" data-reparent-mode="prepend|lg:prepend" data-reparent-target="#content_container|lg:#header_container">
+        <span class="text-gray-600">Dashboard</span>
+        <i class="ki-filled ki-right text-gray-500 text-3xs"></i>
+        <span class="text-gray-700">All Students</span>
+    </div>
+{% endblock breadcrumb %}
+
+{% block content %}
+<!-- <div class="container-fixed">
+    <div class="flex flex-wrap items-center lg:items-end justify-between gap-5 pb-7.5">
+        <div class="flex flex-col justify-center gap-2">
+            <h1 class="text-xl font-semibold leading-none text-gray-900">{{ student.get_full_name }}</h1>
+        </div>
+        <div class="flex items-center gap-2.5">
+            <a class="btn btn-sm btn-light" href="#">Upload CSV</a>
+        </div>
+    </div>
+</div> -->
+
+<div class="container-fixed">
+    <div class="grid grid-cols-3 gap-5">
+        <div class="col-span-1">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">General Info</h3>
+                </div>
+                <div class="card-body">
+                    <div class="flex items-center gap-2.5 mb-4">
+                        {% if student.profile_image %}
+                            <img alt="" class="rounded-full size-20 shrink-0" src="/media/{{ student.profile_image }}" />
+                        {% else %}
+                            <img alt="" class="rounded-full size-20 shrink-0" src="/static/media/avatars/300-2.png" />
+                        {% endif %}
+                        
+                        <div class="flex flex-col">
+                            <a href="{% url 'student_details' student.id %}" class="text-xl font-semibold text-gray-900 mb-px">{{ student.get_full_name }}</a>
+                            <span class="text-md font-medium text-gray-600">{{ student.username }}</span>
+                        </div>
+                    </div>
+                    <table class="table-auto">
+                        <tbody>
+                            <tr>
+                                <td class="text-sm text-gray-600 pb-3.5 pe-3">Class</td>
+                                <td class="text-sm text-gray-900 pb-3.5">{{ student.student_profile.grade }}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-sm text-gray-600 pb-3.5 pe-3">Roll No.</td>
+                                <td class="text-sm text-gray-900 pb-3.5">{{ student.student_profile.total_roll }}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-sm text-gray-600 pb-3.5 pe-3">Date of Birth</td>
+                                <td class="text-sm text-gray-900 pb-3.5">{{ student.date_of_birth|date:'M d, Y' }}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-sm text-gray-600 pb-3.5 pe-3">Date of Join</td>
+                                <td class="text-sm text-gray-900 pb-3.5">{{ student.date_joined|date:'M d, Y' }}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-sm text-gray-600 pb-3.5 pe-3">Blood Group</td>
+                                <td class="text-sm text-gray-900 pb-3.5">A+</td>
+                            </tr>
+                            <tr>
+                                <td class="text-sm text-gray-600 pb-3.5 pe-3">Religion</td>
+                                <td class="text-sm text-gray-900 pb-3.5">Hindu</td>
+                            </tr>
+                            <tr>
+                                <td class="text-sm text-gray-600 pb-3.5 pe-3">Caste</td>
+                                <td class="text-sm text-gray-900 pb-3.5">General</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card mt-5">
+                <div class="card-header">
+                    <h3 class="card-title">Primary Contact Info</h3>
+                </div>
+                <div class="card-body">
+                    <table class="table-auto">
+                        <tbody>
+                            <tr>
+                                <td class="text-sm text-gray-600 pb-3.5 pe-3">Email</td>
+                                <td class="text-sm text-gray-900 pb-3.5">{{ student.student_profile.father_email }}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-sm text-gray-600 pb-3.5 pe-3">Phone</td>
+                                <td class="text-sm text-gray-900 pb-3.5">{{ student.student_profile.father_phone }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-span-2">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"></h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock content %}
+
+
+
+{% block extra_js %}
+    <script>
+        $(document).ready(function(e){
+            
+        });
+    </script>
+{% endblock extra_js %}
+    
